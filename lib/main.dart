@@ -20,14 +20,22 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class HabitListScreen extends StatelessWidget {
+class HabitListScreen extends StatefulWidget {
   const HabitListScreen({super.key});
 
-  final List<String> habits = const [
+  @override
+  State<HabitListScreen> createState() => _HabitListScreenState();
+}
+
+class _HabitListScreenState extends State<HabitListScreen> {
+  final List<String> habits = [
     'Su içmek 💧',
     'Kitap okumak 📚',
     'Spor yapmak 🏃‍♂️',
   ];
+
+  // Her alışkanlık için tamamlanma durumu
+  final List<bool> completed = [false, false, false];
 
   @override
   Widget build(BuildContext context) {
@@ -39,9 +47,14 @@ class HabitListScreen extends StatelessWidget {
       body: ListView.builder(
         itemCount: habits.length,
         itemBuilder: (context, index) {
-          return ListTile(
-            leading: const Icon(Icons.check_circle_outline),
+          return CheckboxListTile(
             title: Text(habits[index]),
+            value: completed[index],
+            onChanged: (bool? value) {
+              setState(() {
+                completed[index] = value ?? false;
+              });
+            },
           );
         },
       ),
