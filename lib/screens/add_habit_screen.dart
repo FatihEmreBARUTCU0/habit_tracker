@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habit_tracker/utils/validators.dart';
 
 class AddHabitScreen extends StatefulWidget {
   const AddHabitScreen({super.key});
@@ -20,16 +21,12 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
   }
 
   void _onChanged(String v) {
-    final ok = _validator(v) == null;
+    final ok =validateHabitName(v) == null;
     if (ok != _canSave) setState(() => _canSave = ok);
     // Sadece butonu aktif/pasif etmek için; asıl kontrol _validator'da.
   }
 
-  String? _validator(String? v) {
-    final t = (v ?? '').trim();
-    if (t.isEmpty) return 'İsim boş olamaz.';
-    return null;
-  }
+  
 
   void _save() {
     final name = _controller.text.trim();
@@ -64,7 +61,7 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
                   hintText: 'Örn: Su içmek',
                   border: OutlineInputBorder(),
                 ),
-                validator: _validator,
+                validator: validateHabitName,
               ),
               const SizedBox(height: 12),
               SizedBox(

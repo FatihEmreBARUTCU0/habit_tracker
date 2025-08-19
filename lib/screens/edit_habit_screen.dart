@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:habit_tracker/utils/validators.dart';
+
 
 class EditHabitScreen extends StatefulWidget {
   const EditHabitScreen({super.key, required this.initialName});
@@ -23,12 +25,17 @@ class _EditHabitScreenState extends State<EditHabitScreen> {
     _canSave = _validator(_controller.text) == null;
   }
 
-  String? _validator(String? v) {
-    final t = (v ?? '').trim();
-    if (t.isEmpty) return 'İsim boş olamaz.';
-    if (t == _original) return 'Bir değişiklik yapmadın.';
-    return null;
-  }
+ String? _validator(String? v) {
+  // 1) Ortak kural: boş olamaz (validators.dart)
+  final base = validateHabitName(v);
+  if (base != null) return base;
+
+  // 2) Edit'e özel kural: eskiyle aynı olmasın
+  final t = (v ?? '').trim();
+  if (t == _original) return 'Bir değişiklik yapmadın.';
+  return null;
+}
+
 
   void _onChanged(String v) {
     final ok = _validator(v) == null;

@@ -164,11 +164,14 @@ class _HabitListScreenState extends State<HabitListScreen> {
                         )
                       : null,
                   title: Text(habit.name),
-                  trailing: IconButton(
-                    tooltip: 'Düzenle',
-                    icon: const Icon(Icons.edit_outlined),
-                    onPressed: () => _goToEdit(habit),
-                  ),
+                trailing: _selectionMode
+    ? const SizedBox.shrink()
+    : IconButton(
+        tooltip: 'Düzenle',
+        icon: const Icon(Icons.edit_outlined),
+        onPressed: () => _goToEdit(habit),
+      ),
+
                   dense: true,
                 );
 
