@@ -13,7 +13,26 @@ class Habit {
     required this.name,
     this.isDone = false,
   });
+
+  // JSON için: nesneden Map'e
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'isDone': isDone,
+    };
+  }
+
+  // JSON için: Map'ten nesneye
+  factory Habit.fromMap(Map<String, dynamic> map) {
+    return Habit(
+      id: map['id'] as String? ?? '',
+      name: map['name'] as String? ?? '',
+      isDone: map['isDone'] as bool? ?? false,
+    );
+  }
 }
+
 
 String genId() {
   final ts = DateTime.now().microsecondsSinceEpoch;

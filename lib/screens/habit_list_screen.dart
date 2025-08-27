@@ -1,8 +1,27 @@
 // lib/screens/habit_list_screen.dart
+import 'package:flutter/foundation.dart'; // debugPrint, kDebugMode
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/models/habit.dart';
 import 'package:habit_tracker/screens/add_habit_screen.dart';
 import 'package:habit_tracker/screens/edit_habit_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert'; // JSON encode/decode için
+
+// === PERSISTENCE HELPERS ===
+const _prefsKey = 'habits_v1';
+
+String _encodeHabits(List<Habit> habits) {
+  final list = habits.map((h) => h.toMap()).toList();
+  return jsonEncode(list);
+}
+
+List<Habit> _decodeHabits(String jsonStr) {
+  final raw = jsonDecode(jsonStr) as List<dynamic>;
+  return raw
+      .map((e) => Habit.fromMap(Map<String, dynamic>.from(e as Map)))
+      .toList();
+}
+// === /PERSISTENCE HELPERS ===
 
 class HabitListScreen extends StatefulWidget {
   const HabitListScreen({super.key});
@@ -21,6 +40,30 @@ class _HabitListScreenState extends State<HabitListScreen> {
   // --- Seçim modu durumu ---
   bool _selectionMode = false;
   final Set<String> _selected = <String>{};
+
+  // ⬇️ Kalıcı depolama: yükle & kaydet
+  Future<void> _loadHabits() async {
+    if (kDebugMode) debugPrint('[load] called');
+    final prefs = await SharedPreferences.getInstance();
+    final jsonStr = prefs.getString(_prefsKey);
+    if (jsonStr == null) {
+      if (kDebugMode) debugPrint('[load] nothing saved');
+      return; // ilk çalıştırmada veri olmayabilir
+    }
+    final loaded = _decodeHabits(jsonStr);
+    if (kDebugMode) debugPrint('[load] loaded ${loaded.length} items');
+    setState(() {
+      _habits
+        ..clear()
+        ..addAll(loaded);
+    });
+  }
+
+  Future<void> _saveHabits() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_prefsKey, _encodeHabits(_habits));
+    if (kDebugMode) debugPrint('[save] wrote ${_habits.length} items');
+  }
 
   void _enterSelection(Habit h) {
     setState(() {
@@ -62,14 +105,19 @@ class _HabitListScreenState extends State<HabitListScreen> {
         result.trim().isNotEmpty &&
         result.trim() != habit.name.trim()) {
       setState(() => habit.name = result.trim());
+
+      // önce kullanıcıya geri bildirim ver (context burada güvenli)
       ScaffoldMessenger.of(context)
         ..clearSnackBars()
         ..showSnackBar(const SnackBar(content: Text('Güncellendi.')));
+
+      // sonra kaydet (buradan sonra context kullanılmıyor, uyarı yok)
+      await _saveHabits();
     }
   }
 
   // --- Toplu sil: seçim modundaki öğeleri sil + Undo ---
-  void _removeSelectedWithUndo() {
+  void _removeSelectedWithUndo() async {
     if (_selected.isEmpty) {
       ScaffoldMessenger.of(context)
         ..clearSnackBars()
@@ -90,6 +138,9 @@ class _HabitListScreenState extends State<HabitListScreen> {
       _selected.clear();
     });
 
+    await _saveHabits(); // async gap
+    if (!mounted) return; // context guard
+
     ScaffoldMessenger.of(context)
       ..clearSnackBars()
       ..showSnackBar(
@@ -99,7 +150,9 @@ class _HabitListScreenState extends State<HabitListScreen> {
             label: 'Geri Al',
             onPressed: () {
               setState(() {
-                removed.sort((a, b) => (a['index'] as int).compareTo(b['index'] as int));
+                removed.sort(
+                  (a, b) => (a['index'] as int).compareTo(b['index'] as int),
+                );
                 for (final r in removed) {
                   final idx = r['index'] as int;
                   final item = r['item'] as Habit;
@@ -108,11 +161,18 @@ class _HabitListScreenState extends State<HabitListScreen> {
                   _habits.insert(safeIndex, item);
                 }
               });
+              _saveHabits(); // await etmiyoruz; uyarı yok
             },
           ),
           duration: const Duration(seconds: 3),
         ),
       );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadHabits(); // uygulama açılır açılmaz kayıtlı veriyi getir
   }
 
   @override
@@ -129,9 +189,7 @@ class _HabitListScreenState extends State<HabitListScreen> {
                 onPressed: _exitSelection,
               )
             : null,
-        title: Text(_selectionMode
-            ? '${_selected.length} seçildi'
-            : 'Alışkanlıklarım'),
+        title: Text(_selectionMode ? '${_selected.length} seçildi' : 'Alışkanlıklarım'),
         centerTitle: true,
         actions: [
           if (_selectionMode)
@@ -144,7 +202,6 @@ class _HabitListScreenState extends State<HabitListScreen> {
             const SizedBox.shrink(), // normal modda sağ taraf boş kalsın
         ],
       ),
-
       body: hasItems
           ? ListView.separated(
               itemCount: _habits.length,
@@ -153,7 +210,6 @@ class _HabitListScreenState extends State<HabitListScreen> {
                 final habit = _habits[index];
                 final isSelected = _selected.contains(habit.id);
 
-                // List tile (tek yerde tanımlayalım)
                 final tile = ListTile(
                   onLongPress: () => _enterSelection(habit),
                   onTap: _selectionMode ? () => _toggleSelect(habit) : null,
@@ -164,21 +220,17 @@ class _HabitListScreenState extends State<HabitListScreen> {
                         )
                       : null,
                   title: Text(habit.name),
-                trailing: _selectionMode
-    ? const SizedBox.shrink()
-    : IconButton(
-        tooltip: 'Düzenle',
-        icon: const Icon(Icons.edit_outlined),
-        onPressed: () => _goToEdit(habit),
-      ),
-
+                  trailing: _selectionMode
+                      ? const SizedBox.shrink()
+                      : IconButton(
+                          tooltip: 'Düzenle',
+                          icon: const Icon(Icons.edit_outlined),
+                          onPressed: () => _goToEdit(habit),
+                        ),
                   dense: true,
                 );
 
-                // Seçim modunda swipe kapalı; normal modda açık
-                if (_selectionMode) {
-                  return tile;
-                }
+                if (_selectionMode) return tile; // seçim modunda swipe kapalı
 
                 return Dismissible(
                   key: ValueKey(habit.id),
@@ -205,6 +257,8 @@ class _HabitListScreenState extends State<HabitListScreen> {
                       _habits.removeWhere((h) => h.id == removedId);
                     });
 
+                    _saveHabits(); // await etmiyoruz; context güvenli
+
                     ScaffoldMessenger.of(context)
                       ..clearSnackBars()
                       ..showSnackBar(
@@ -214,11 +268,13 @@ class _HabitListScreenState extends State<HabitListScreen> {
                             label: 'Geri Al',
                             onPressed: () {
                               setState(() {
-                                final safeIndex = (removedIndex >= 0 && removedIndex <= _habits.length)
-                                    ? removedIndex
-                                    : 0;
+                                final safeIndex =
+                                    (removedIndex >= 0 && removedIndex <= _habits.length)
+                                        ? removedIndex
+                                        : 0;
                                 _habits.insert(safeIndex, removedItem);
                               });
+                              _saveHabits();
                             },
                           ),
                           duration: const Duration(seconds: 3),
@@ -230,8 +286,6 @@ class _HabitListScreenState extends State<HabitListScreen> {
               },
             )
           : const _EmptyState(),
-
-      // Seçim modundayken FAB gizli
       floatingActionButton: _selectionMode
           ? null
           : FloatingActionButton.extended(
@@ -250,6 +304,7 @@ class _HabitListScreenState extends State<HabitListScreen> {
                   setState(() {
                     _habits.add(Habit(id: genId(), name: result.trim()));
                   });
+                  _saveHabits();
                 }
               },
             ),
