@@ -65,6 +65,29 @@ class _HabitListScreenState extends State<HabitListScreen> {
     if (kDebugMode) debugPrint('[save] wrote ${_habits.length} items');
   }
 
+// Bugünün tarihini 'YYYY-MM-DD' üretir
+String _todayYmd() {
+  final now = DateTime.now();
+  final m = now.month.toString().padLeft(2, '0');
+  final d = now.day.toString().padLeft(2, '0');
+  return '${now.year}-$m-$d';
+}
+
+// "Bugün ✓" toggle mantığı
+void _toggleToday(Habit habit) {
+  setState(() {
+    final today = _todayYmd();
+    if (habit.lastCheckedYmd == today) {
+      habit.lastCheckedYmd = '';       // bugünkü işareti kaldır
+    } else {
+      habit.lastCheckedYmd = today;    // bugün olarak işaretle
+    }
+  });
+  _saveHabits(); // kalıcı depolama
+}
+
+
+
   void _enterSelection(Habit h) {
     setState(() {
       _selectionMode = true;
@@ -221,12 +244,27 @@ class _HabitListScreenState extends State<HabitListScreen> {
                       : null,
                   title: Text(habit.name),
                   trailing: _selectionMode
-                      ? const SizedBox.shrink()
-                      : IconButton(
-                          tooltip: 'Düzenle',
-                          icon: const Icon(Icons.edit_outlined),
-                          onPressed: () => _goToEdit(habit),
-                        ),
+    ? const SizedBox.shrink()
+    : Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IconButton(
+            tooltip: habit.isCheckedToday ? 'Bugün işareti kaldır' : 'Bugün ✓',
+            icon: Icon(
+              habit.isCheckedToday
+                  ? Icons.check_circle
+                  : Icons.circle_outlined,
+            ),
+            onPressed: () => _toggleToday(habit),
+          ),
+          IconButton(
+            tooltip: 'Düzenle',
+            icon: const Icon(Icons.edit_outlined),
+            onPressed: () => _goToEdit(habit),
+          ),
+        ],
+      ),
+
                   dense: true,
                 );
 

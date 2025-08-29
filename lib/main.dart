@@ -1,9 +1,69 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/screens/habit_list_screen.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
-void main() {
+final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+Future<void> showTestNotificationIn5s() async {
+  // 5 sn bekle
+  await Future.delayed(const Duration(seconds: 5));
+
+  const androidDetails = AndroidNotificationDetails(
+    'test_channel_id',
+    'Test Channel',
+    channelDescription: 'Deneme bildirimi kanalı',
+    importance: Importance.max,
+    priority: Priority.high,
+  );
+  const details = NotificationDetails(android: androidDetails);
+
+  // Anında göster (biz zaten 5 sn bekledik)
+  await flutterLocalNotificationsPlugin.show(
+    1,
+    'Alışkanlık Hatırlatma',
+    'Bu bir test bildirimi (5 sn sonra).',
+    details,
+    payload: 'test',
+  );
+}
+
+
+
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Zaman dilimi ayarı (planlı bildirimlerde doğru zaman için)
+  tz.initializeTimeZones();
+  tz.setLocalLocation(tz.getLocation('Europe/Istanbul'));
+
+  // Bildirim plugin’ini initialize et
+  const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
+  const initSettings = InitializationSettings(android: androidInit);
+  await flutterLocalNotificationsPlugin.initialize(initSettings);
+
+    // ⬇️ Android 13+ runtime izin + kanal
+  final androidPlugin = flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
+
+  await androidPlugin?.requestNotificationsPermission();
+
+  await androidPlugin?.createNotificationChannel(const AndroidNotificationChannel(
+    'test_channel_id',
+    'Test Channel',
+    description: 'Deneme bildirimi kanalı',
+     importance: Importance.max,
+  ));
+
+await showTestNotificationIn5s(); // 5 sn sonra bildirimi görmelisin
+
+
   runApp(const MyApp());
 }
+
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
