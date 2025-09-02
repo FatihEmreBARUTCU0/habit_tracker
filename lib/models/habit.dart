@@ -6,41 +6,61 @@ int _ctr = 0;
 class Habit {
   final String id;
   String name;
-  bool isDone;
 
-  // NEW: Bugünlük işaret bilgisini hesaplarken kullanacağımız alan (YYYY-MM-DD)
+  // (Opsiyonel) Eski alan — geriye uyumluluk için şimdilik tutuyoruz ama KULLANMIYORUZ.
   String lastCheckedYmd;
+
+  // YENİ: tarih (YYYY-MM-DD) -> o gün yapıldı mı?
+  Map<String, bool> history;
 
   Habit({
     required this.id,
     required this.name,
-    this.isDone = false,
-    this.lastCheckedYmd = '', // NEW: hiç işaretlenmediyse boş kalsın
-  });
+    this.lastCheckedYmd = '',              // eski veri yüklenirse burada dursun
+    Map<String, bool>? history,            // null gelirse boş map yap
+  }) : history = history ?? {};
 
-  // NEW: Bugün işaretli mi? (gün değişince otomatik false olur)
-  bool get isCheckedToday => lastCheckedYmd == _todayYmd();
+  // BUGÜN işaretli mi? Artık history üzerinden hesaplıyoruz.
+  bool get isCheckedToday => history[_todayYmd()] == true;
 
   // JSON için: nesneden Map'e
   Map<String, dynamic> toMap() {
     return {
       'id': id,
       'name': name,
-      'isDone': isDone,
-      'lastCheckedYmd': lastCheckedYmd, // NEW
+      'lastCheckedYmd': lastCheckedYmd,    // geriye uyumluluk: yazmaya devam (isteğe bağlı)
+      'history': history,                  // Map<String,bool> JSON'a doğal gider
     };
   }
 
   // JSON için: Map'ten nesneye
   factory Habit.fromMap(Map<String, dynamic> map) {
+    // history güvenli parse
+    final rawHistory = map['history'];
+    Map<String, bool> parsedHistory = {};
+    if (rawHistory is Map) {
+      parsedHistory = rawHistory.map((k, v) => MapEntry(k.toString(), v == true));
+    }
+
     return Habit(
       id: map['id'] as String? ?? '',
       name: map['name'] as String? ?? '',
-      isDone: map['isDone'] as bool? ?? false,
-      lastCheckedYmd: map['lastCheckedYmd'] as String? ?? '', // NEW
+      lastCheckedYmd: map['lastCheckedYmd'] as String? ?? '',  // eski veriyi al
+      history: parsedHistory,
     );
   }
+
+  // YENİ: Bugünü toggle etmek için ufak yardımcı (istersen kullanırsın)
+  void toggleToday() {
+    final t = _todayYmd();
+    if (history[t] == true) {
+      history.remove(t); // yok = false
+    } else {
+      history[t] = true;
+    }
+  }
 }
+
 
 // Yardımcı: bugünün tarihini 'YYYY-MM-DD' üret
 String _todayYmd() {
