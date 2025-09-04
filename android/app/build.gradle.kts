@@ -15,11 +15,9 @@ android {
     targetCompatibility = JavaVersion.VERSION_17
     isCoreLibraryDesugaringEnabled = true
 }
-
-kotlinOptions {
-    jvmTarget = "17"
-}
-
+    kotlinOptions {
+       jvmTarget = "17"
+    }
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
@@ -45,8 +43,6 @@ flutter {
     source = "../.."
 }
 
-
 dependencies {
-    // Diğer bağımlılıkların kalsın
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
 }

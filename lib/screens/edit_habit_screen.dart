@@ -20,25 +20,39 @@ class _EditHabitScreenState extends State<EditHabitScreen> {
   final _formKey = GlobalKey<FormState>();
   bool _canSave = false;
 
-  @override
-  void initState() {
-    super.initState();
-    _original = widget.initialName.trim();
-    _controller = TextEditingController(text: widget.initialName);
-    _canSave = _validator(_controller.text) == null;
-  }
+@override
+void initState() {
+  super.initState();
+  _original = widget.initialName.trim();
+  _controller = TextEditingController(text: widget.initialName);
+  _canSave = _isValidInitial(_controller.text);
 
-String? _validator(String? v) {
-  // 1) Ortak kural: boş olamaz (validators.dart)
-  final base = validateHabitName(v);
-  if (base != null) return base;
-
-  // 2) Edit'e özel kural: eskiyle aynı olmasın
-  final t = (v ?? '').trim();
-  if (t == _original) return AppLocalizations.of(context)!.noChange;
-  return null;
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    if (!mounted) return;
+    final ok = _validator(_controller.text) == null;
+    if (ok != _canSave) setState(() => _canSave = ok);
+  });
 }
 
+
+// initState için hızlı, context'siz kontrol
+bool _isValidInitial(String? v) {
+  final t = (v ?? '').trim();
+  return t.isNotEmpty && t != _original;
+}
+
+
+String? _validator(String? v) {
+  final base = validateHabitName(v);      // Boş olamaz vb.
+  if (base != null) return base;
+
+  final t = (v ?? '').trim();
+  if (t == _original) {
+    // Bu satır artık sadece build sırasında çalışır → güvenli
+    return AppLocalizations.of(context)!.noChange;
+  }
+  return null;
+}
 
 
   void _onChanged(String v) {
