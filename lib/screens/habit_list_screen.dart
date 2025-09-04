@@ -7,6 +7,9 @@ import 'package:habit_tracker/screens/edit_habit_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert'; // JSON encode/decode için
 import 'package:habit_tracker/screens/habit_detail_screen.dart';
+import 'package:habit_tracker/screens/settings_screen.dart';
+import 'package:habit_tracker/l10n/generated/app_localizations.dart';
+
 
 
 // === PERSISTENCE HELPERS ===
@@ -123,7 +126,10 @@ void _toggleToday(Habit habit) {
       // önce kullanıcıya geri bildirim ver (context burada güvenli)
       ScaffoldMessenger.of(context)
         ..clearSnackBars()
-        ..showSnackBar(const SnackBar(content: Text('Güncellendi.')));
+       ..showSnackBar(
+  SnackBar(content: Text(AppLocalizations.of(context)!.updated)),
+);
+
 
       // sonra kaydet (buradan sonra context kullanılmıyor, uyarı yok)
       await _saveHabits();
@@ -135,7 +141,7 @@ void _toggleToday(Habit habit) {
     if (_selected.isEmpty) {
       ScaffoldMessenger.of(context)
         ..clearSnackBars()
-        ..showSnackBar(const SnackBar(content: Text('Seçili öğe yok')));
+        ..showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.noSelection)));
       return;
     }
 
@@ -159,9 +165,11 @@ void _toggleToday(Habit habit) {
       ..clearSnackBars()
       ..showSnackBar(
         SnackBar(
-          content: Text('${removed.length} öğe silindi'),
+          content: Text(AppLocalizations.of(context)!.itemsDeleted(removed.length)),
+
           action: SnackBarAction(
-            label: 'Geri Al',
+            label: AppLocalizations.of(context)!.undo,
+
             onPressed: () {
               setState(() {
                 removed.sort(
@@ -191,6 +199,7 @@ void _toggleToday(Habit habit) {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     final scheme = Theme.of(context).colorScheme;
     final hasItems = _habits.isNotEmpty;
 
@@ -198,23 +207,35 @@ void _toggleToday(Habit habit) {
       appBar: AppBar(
         leading: _selectionMode
             ? IconButton(
-                tooltip: 'İptal',
+                tooltip: l.cancel,
                 icon: const Icon(Icons.close),
                 onPressed: _exitSelection,
               )
             : null,
-        title: Text(_selectionMode ? '${_selected.length} seçildi' : 'Alışkanlıklarım'),
+        title: Text(_selectionMode ? l.selectedCount(_selected.length) : l.habitListTitle),
         centerTitle: true,
-        actions: [
-          if (_selectionMode)
-            IconButton(
-              tooltip: 'Seçilenleri Sil',
-              icon: const Icon(Icons.delete_outline),
-              onPressed: _removeSelectedWithUndo,
-            )
-          else
-            const SizedBox.shrink(), // normal modda sağ taraf boş kalsın
-        ],
+       actions: [
+  if (_selectionMode)
+    IconButton(
+       tooltip: l.deleteSelected,
+      icon: const Icon(Icons.delete_outline),
+      onPressed: _removeSelectedWithUndo,
+    )
+  else ...[
+    // ⚙️ Ayarlar ikonu
+    IconButton(
+      tooltip: l.settings,
+      icon: const Icon(Icons.settings),
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const SettingsScreen()),
+        );
+      },
+    ),
+  ],
+],
+
       ),
       body: hasItems
           ? ListView.separated(
@@ -241,7 +262,7 @@ void _toggleToday(Habit habit) {
         mainAxisSize: MainAxisSize.min,
         children: [
           IconButton(
-            tooltip: habit.isCheckedToday ? 'Bugün işareti kaldır' : 'Bugün ✓',
+            tooltip: habit.isCheckedToday ? l.todayUncheck : l.todayCheck,
             icon: Icon(
               habit.isCheckedToday
                   ? Icons.check_circle
@@ -250,14 +271,14 @@ void _toggleToday(Habit habit) {
             onPressed: () => _toggleToday(habit),
           ),
           IconButton(
-            tooltip: 'Düzenle',
+            tooltip: l.edit,
             icon: const Icon(Icons.edit_outlined),
             onPressed: () => _goToEdit(habit),
           ),
            const SizedBox(width: 4),
     TextButton.icon(
       icon: const Icon(Icons.insights_outlined),
-      label: const Text('Detay'),
+      label: Text(l.detail),
       onPressed: () async {
         await Navigator.push(
           context,
@@ -312,9 +333,9 @@ void _toggleToday(Habit habit) {
                       ..clearSnackBars()
                       ..showSnackBar(
                         SnackBar(
-                          content: Text('"$removedName" silindi'),
+                          content: Text(l.itemDeleted(removedName)),
                           action: SnackBarAction(
-                            label: 'Geri Al',
+                            label: l.undo,
                             onPressed: () {
                               setState(() {
                                 final safeIndex =
@@ -338,9 +359,9 @@ void _toggleToday(Habit habit) {
       floatingActionButton: _selectionMode
           ? null
           : FloatingActionButton.extended(
-              tooltip: 'Alışkanlık Ekle',
+              tooltip: l.addHabit,
               icon: const Icon(Icons.add),
-              label: const Text('Ekle'),
+              label: Text(l.add),
               onPressed: () async {
                 final result = await Navigator.push(
                   context,
@@ -366,14 +387,16 @@ class _EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
+    final l = AppLocalizations.of(context)!;
+    return Center(
       child: Padding(
-        padding: EdgeInsets.all(24),
+        padding: const EdgeInsets.all(24),
         child: Text(
-          'Henüz alışkanlık yok.\nSağ alttaki + ile ekleyebilirsin.',
+          l.noHabitsHint,
           textAlign: TextAlign.center,
         ),
       ),
     );
   }
 }
+

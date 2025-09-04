@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/utils/validators.dart';
+import 'package:habit_tracker/l10n/generated/app_localizations.dart';
+
+
+
 
 class AddHabitScreen extends StatefulWidget {
   const AddHabitScreen({super.key});
@@ -21,12 +25,10 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
   }
 
   void _onChanged(String v) {
-    final ok =validateHabitName(v) == null;
+    final ok = validateHabitName(v) == null;
     if (ok != _canSave) setState(() => _canSave = ok);
     // Sadece butonu aktif/pasif etmek için; asıl kontrol _validator'da.
   }
-
-  
 
   void _save() {
     final name = _controller.text.trim();
@@ -42,8 +44,10 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Alışkanlık Ekle')),
+      appBar: AppBar(title: Text(l.addHabitTitle)),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(
@@ -56,10 +60,10 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
                 textInputAction: TextInputAction.done,
                 onChanged: _onChanged,
                 onFieldSubmitted: (_) => _save(),
-                decoration: const InputDecoration(
-                  labelText: 'Alışkanlık adı',
-                  hintText: 'Örn: Su içmek',
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  labelText: l.habitName,
+                  hintText: l.habitNameHint,
+                  border: const OutlineInputBorder(),
                 ),
                 validator: validateHabitName,
               ),
@@ -68,7 +72,7 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: _canSave ? _save : null,
-                  child: const Text('Kaydet'),
+                  child: Text(l.save),
                 ),
               ),
             ],

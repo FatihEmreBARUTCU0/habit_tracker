@@ -1,0 +1,84 @@
+{
+  "habitListTitle": "Alışkanlıklarım",
+
+  "cancel": "İptal",
+  "settings": "Ayarlar",
+
+  "selectedCount": "{count} seçildi",
+  "@selectedCount": {
+    "description": "Kaç öğe seçili olduğunu gösterir",
+    "placeholders": {
+      "count": { "type": "int", "example": "2" }
+    }
+  },
+
+  "deleteSelected": "Seçilenleri Sil",
+
+  "todayCheck": "Bugün ✓",
+  "todayUncheck": "Bugün işareti kaldır",
+
+  "edit": "Düzenle",
+  "detail": "Detay",
+
+  "noSelection": "Seçili öğe yok",
+
+  "itemsDeleted": "{count} öğe silindi",
+  "@itemsDeleted": {
+    "placeholders": {
+      "count": { "type": "int", "example": "2" }
+    }
+  },
+
+  "undo": "Geri Al",
+
+  "itemDeleted": "\"{name}\" silindi",
+  "@itemDeleted": {
+    "placeholders": {
+      "name": { "type": "String", "example": "Su içmek" }
+    }
+  },
+
+  "addHabit": "Alışkanlık Ekle",
+  "add": "Ekle",
+
+  "noHabitsHint": "Henüz alışkanlık yok.\nSağ alttaki + ile ekleyebilirsin.",
+
+  "settingsTitle": "Ayarlar",
+  "themeDark": "Koyu Tema",
+  "language": "Dil",
+  "turkish": "Türkçe",
+  "english": "İngilizce",
+  "general": "Genel",
+
+  "addHabitTitle": "Alışkanlık Ekle",
+  "habitName": "Alışkanlık adı",
+  "habitNameHint": "Örn: Su içmek",
+  "save": "Kaydet",
+
+  "editHabitTitle": "Alışkanlık Düzenle",
+  "newName": "Yeni ad",
+  "newNameHint": "Örn: Sabah su içmek",
+  "updateButton": "Güncelle",
+  "updated": "Güncellendi.",
+
+  "noChange": "Bir değişiklik yapmadın.",
+
+  "detailTitleFor": "Detay: {name}",
+  "@detailTitleFor": {
+    "placeholders": {
+      "name": { "type": "String", "example": "Kitap okumak" }
+    }
+  },
+
+  "last7Days": "Son 7 Gün",
+  "successLabel": "Başarı: {done}/7  (%{percent})",
+  "@successLabel": {
+    "placeholders": {
+      "done": { "type": "int", "example": "5" },
+      "percent": { "type": "int", "example": "71" }
+    }
+  },
+
+  "toggleTodayOn": "Bugün ✓ İşaretle",
+  "toggleTodayOff": "Bugün ✓ (Geri Al)"
+}

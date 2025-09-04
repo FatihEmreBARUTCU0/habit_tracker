@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/utils/validators.dart';
+import 'package:habit_tracker/l10n/generated/app_localizations.dart';
+
+
 
 
 class EditHabitScreen extends StatefulWidget {
@@ -25,16 +28,17 @@ class _EditHabitScreenState extends State<EditHabitScreen> {
     _canSave = _validator(_controller.text) == null;
   }
 
- String? _validator(String? v) {
+String? _validator(String? v) {
   // 1) Ortak kural: boş olamaz (validators.dart)
   final base = validateHabitName(v);
   if (base != null) return base;
 
   // 2) Edit'e özel kural: eskiyle aynı olmasın
   final t = (v ?? '').trim();
-  if (t == _original) return 'Bir değişiklik yapmadın.';
+  if (t == _original) return AppLocalizations.of(context)!.noChange;
   return null;
 }
+
 
 
   void _onChanged(String v) {
@@ -56,8 +60,10 @@ class _EditHabitScreenState extends State<EditHabitScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Alışkanlık Düzenle')),
+      appBar: AppBar(title: Text(l.editHabitTitle)),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(
@@ -70,10 +76,10 @@ class _EditHabitScreenState extends State<EditHabitScreen> {
                 textInputAction: TextInputAction.done,
                 onChanged: _onChanged,
                 onFieldSubmitted: (_) => _save(),
-                decoration: const InputDecoration(
-                  labelText: 'Yeni ad',
-                  hintText: 'Örn: Sabah su içmek',
-                  border: OutlineInputBorder(),
+                decoration:  InputDecoration(
+                  labelText: l.newName,
+                  hintText:  l.newNameHint,
+                  border: const OutlineInputBorder(),
                 ),
                 validator: _validator,
               ),
@@ -82,7 +88,8 @@ class _EditHabitScreenState extends State<EditHabitScreen> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: _canSave ? _save : null,
-                  child: const Text('Güncelle'),
+                  child: Text(l.updated),
+
                 ),
               ),
             ],

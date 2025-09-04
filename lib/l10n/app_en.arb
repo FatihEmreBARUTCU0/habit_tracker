@@ -1,0 +1,84 @@
+{
+  "habitListTitle": "My Habits",
+
+  "cancel": "Cancel",
+  "settings": "Settings",
+
+  "selectedCount": "{count} selected",
+  "@selectedCount": {
+    "description": "How many items are selected",
+    "placeholders": {
+      "count": { "type": "int", "example": "3" }
+    }
+  },
+
+  "deleteSelected": "Delete selected",
+
+  "todayCheck": "Today ✓",
+  "todayUncheck": "Remove today's check",
+
+  "edit": "Edit",
+  "detail": "Detail",
+
+  "noSelection": "No selected item",
+
+  "itemsDeleted": "{count} item(s) deleted",
+  "@itemsDeleted": {
+    "placeholders": {
+      "count": { "type": "int", "example": "2" }
+    }
+  },
+
+  "undo": "Undo",
+
+  "itemDeleted": "\"{name}\" deleted",
+  "@itemDeleted": {
+    "placeholders": {
+      "name": { "type": "String", "example": "Drink water" }
+    }
+  },
+
+  "addHabit": "Add Habit",
+  "add": "Add",
+
+  "noHabitsHint": "No habits yet.\nUse the + button below to add.",
+
+  "settingsTitle": "Settings",
+  "themeDark": "Dark Theme",
+  "language": "Language",
+  "turkish": "Turkish",
+  "english": "English",
+  "general": "General",
+
+  "addHabitTitle": "Add Habit",
+  "habitName": "Habit name",
+  "habitNameHint": "e.g., Drink water",
+  "save": "Save",
+
+  "editHabitTitle": "Edit Habit",
+  "newName": "New name",
+  "newNameHint": "e.g., Morning water",
+  "updateButton": "Update",
+  "updated": "Updated",
+
+  "noChange": "You didn’t change anything.",
+
+  "detailTitleFor": "Detail: {name}",
+  "@detailTitleFor": {
+    "placeholders": {
+      "name": { "type": "String", "example": "Read book" }
+    }
+  },
+
+  "last7Days": "Last 7 Days",
+  "successLabel": "Success: {done}/7  (%{percent})",
+  "@successLabel": {
+    "placeholders": {
+      "done": { "type": "int", "example": "5" },
+      "percent": { "type": "int", "example": "71" }
+    }
+  },
+
+  "toggleTodayOn": "Mark Today ✓",
+  "toggleTodayOff": "Today ✓ (Undo)"
+}
