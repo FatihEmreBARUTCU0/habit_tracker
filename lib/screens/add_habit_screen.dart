@@ -25,7 +25,7 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
   }
 
   void _onChanged(String v) {
-    final ok = validateHabitName(v) == null;
+     final ok = validateHabitName(context)(v) == null;
     if (ok != _canSave) setState(() => _canSave = ok);
     // Sadece butonu aktif/pasif etmek için; asıl kontrol _validator'da.
   }
@@ -65,7 +65,7 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
                   hintText: l.habitNameHint,
                   border: const OutlineInputBorder(),
                 ),
-                validator: validateHabitName,
+                validator: validateHabitName(context),
               ),
               const SizedBox(height: 12),
               SizedBox(

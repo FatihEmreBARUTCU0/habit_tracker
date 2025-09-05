@@ -62,6 +62,8 @@
   "updated": "Updated",
 
   "noChange": "You didn’t change anything.",
+  "nameEmptyError": "Name cannot be empty.",
+
 
   "detailTitleFor": "Detail: {name}",
   "@detailTitleFor": {

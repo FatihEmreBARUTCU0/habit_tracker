@@ -111,6 +111,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noChange => 'You didn’t change anything.';
 
   @override
+  String get nameEmptyError => 'Name cannot be empty.';
+
+  @override
   String detailTitleFor(String name) {
     return 'Detail: $name';
   }

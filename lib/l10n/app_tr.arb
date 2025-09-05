@@ -62,6 +62,7 @@
   "updated": "Güncellendi.",
 
   "noChange": "Bir değişiklik yapmadın.",
+  "nameEmptyError": "İsim boş olamaz.",
 
   "detailTitleFor": "Detay: {name}",
   "@detailTitleFor": {

@@ -112,6 +112,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get noChange => 'Bir değişiklik yapmadın.';
 
   @override
+  String get nameEmptyError => 'İsim boş olamaz.';
+
+  @override
   String detailTitleFor(String name) {
     return 'Detay: $name';
   }

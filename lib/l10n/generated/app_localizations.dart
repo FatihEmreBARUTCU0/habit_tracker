@@ -290,6 +290,12 @@ abstract class AppLocalizations {
   /// **'You didn’t change anything.'**
   String get noChange;
 
+  /// No description provided for @nameEmptyError.
+  ///
+  /// In en, this message translates to:
+  /// **'Name cannot be empty.'**
+  String get nameEmptyError;
+
   /// No description provided for @detailTitleFor.
   ///
   /// In en, this message translates to:

@@ -43,7 +43,7 @@ bool _isValidInitial(String? v) {
 
 
 String? _validator(String? v) {
-  final base = validateHabitName(v);      // Boş olamaz vb.
+  final base = validateHabitName(context)(v);     // Boş olamaz vb.
   if (base != null) return base;
 
   final t = (v ?? '').trim();
