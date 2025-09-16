@@ -35,20 +35,23 @@ class Habit {
 
   // JSON için: Map'ten nesneye
   factory Habit.fromMap(Map<String, dynamic> map) {
-    // history güvenli parse
-    final rawHistory = map['history'];
-    Map<String, bool> parsedHistory = {};
-    if (rawHistory is Map) {
-      parsedHistory = rawHistory.map((k, v) => MapEntry(k.toString(), v == true));
-    }
-
-    return Habit(
-      id: map['id'] as String? ?? '',
-      name: map['name'] as String? ?? '',
-      lastCheckedYmd: map['lastCheckedYmd'] as String? ?? '',  // eski veriyi al
-      history: parsedHistory,
-    );
+  final lc = map['lastCheckedYmd'] as String? ?? '';
+  final rawHistory = map['history'];
+  Map<String, bool> parsedHistory = {};
+  if (rawHistory is Map) {
+    parsedHistory = rawHistory.map((k, v) => MapEntry(k.toString(), v == true));
   }
+  if (parsedHistory.isEmpty && lc.isNotEmpty) {
+    parsedHistory[lc] = true; // eski veriyi kaybetme
+  }
+  return Habit(
+    id: map['id'] as String? ?? '',
+    name: map['name'] as String? ?? '',
+    lastCheckedYmd: lc,
+    history: parsedHistory,
+  );
+}
+
 
   // YENİ: Bugünü toggle etmek için ufak yardımcı (istersen kullanırsın)
   void toggleToday() {

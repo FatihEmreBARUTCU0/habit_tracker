@@ -81,5 +81,8 @@
   },
 
   "toggleTodayOn": "Bugün ✓ İşaretle",
-  "toggleTodayOff": "Bugün ✓ (Geri Al)"
+  "toggleTodayOff": "Bugün ✓ (Geri Al)",
+  "update": "Güncelle",
+"duplicateName": "Bu alışkanlık adı zaten var."
+
 }

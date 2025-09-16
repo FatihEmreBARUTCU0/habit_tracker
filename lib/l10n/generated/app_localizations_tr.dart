@@ -132,4 +132,10 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get toggleTodayOff => 'Bugün ✓ (Geri Al)';
+
+  @override
+  String get update => 'Güncelle';
+
+  @override
+  String get duplicateName => 'Bu alışkanlık adı zaten var.';
 }

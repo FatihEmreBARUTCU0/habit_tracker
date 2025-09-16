@@ -82,5 +82,8 @@
   },
 
   "toggleTodayOn": "Mark Today ✓",
-  "toggleTodayOff": "Today ✓ (Undo)"
+  "toggleTodayOff": "Today ✓ (Undo)",
+  "update": "Update",
+"duplicateName": "This habit name already exists."
+
 }

@@ -131,4 +131,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get toggleTodayOff => 'Today ✓ (Undo)';
+
+  @override
+  String get update => 'Update';
+
+  @override
+  String get duplicateName => 'This habit name already exists.';
 }

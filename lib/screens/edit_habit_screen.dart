@@ -102,7 +102,7 @@ String? _validator(String? v) {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: _canSave ? _save : null,
-                  child: Text(l.updated),
+                  child: Text(l.update),
 
                 ),
               ),

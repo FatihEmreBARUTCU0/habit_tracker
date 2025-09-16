@@ -325,6 +325,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Today ✓ (Undo)'**
   String get toggleTodayOff;
+
+  /// No description provided for @update.
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get update;
+
+  /// No description provided for @duplicateName.
+  ///
+  /// In en, this message translates to:
+  /// **'This habit name already exists.'**
+  String get duplicateName;
 }
 
 class _AppLocalizationsDelegate

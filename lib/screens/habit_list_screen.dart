@@ -117,23 +117,33 @@ void _toggleToday(Habit habit) {
     );
 
     if (!mounted) return;
+    final l = AppLocalizations.of(context)!;
 
     if (result is String &&
-        result.trim().isNotEmpty &&
-        result.trim() != habit.name.trim()) {
-      setState(() => habit.name = result.trim());
-
-      // önce kullanıcıya geri bildirim ver (context burada güvenli)
-      ScaffoldMessenger.of(context)
-        ..clearSnackBars()
-       ..showSnackBar(
-  SnackBar(content: Text(AppLocalizations.of(context)!.updated)),
+    result.trim().isNotEmpty &&
+    result.trim() != habit.name.trim()) {
+  final newName = result.trim();
+ final exists = _habits.any((h) =>
+  h.id != habit.id &&
+  h.name.trim().toLowerCase() == newName.toLowerCase(),
 );
 
+  if (exists) {
+    ScaffoldMessenger.of(context)
+      ..clearSnackBars()
+      ..showSnackBar(SnackBar(content: Text(l.duplicateName)));
+    return; // aynı isim varsa kaydetme
+  }
 
-      // sonra kaydet (buradan sonra context kullanılmıyor, uyarı yok)
-      await _saveHabits();
-    }
+  setState(() => habit.name = newName);
+
+  ScaffoldMessenger.of(context)
+    ..clearSnackBars()
+    ..showSnackBar(SnackBar(content: Text(l.updated)));
+
+  await _saveHabits();
+}
+
   }
 
   // --- Toplu sil: seçim modundaki öğeleri sil + Undo ---
@@ -289,7 +299,7 @@ void _toggleToday(Habit habit) {
             ),
           ),
         );
-        if (!mounted) return;
+        if (!context.mounted) return;
         setState(() {}); // Detaydan dönünce UI yenilensin
       },
     ),
@@ -368,14 +378,22 @@ void _toggleToday(Habit habit) {
                   MaterialPageRoute(builder: (_) => const AddHabitScreen()),
                 );
 
-                if (!mounted) return;
+                 if (!context.mounted) return;
 
                 if (result is String && result.trim().isNotEmpty) {
-                  setState(() {
-                    _habits.add(Habit(id: genId(), name: result.trim()));
-                  });
-                  _saveHabits();
-                }
+  final newName = result.trim();
+  final exists = _habits.any(
+    (h) => h.name.trim().toLowerCase() == newName.toLowerCase(),
+  );
+  if (exists) {
+    ScaffoldMessenger.of(context)
+      ..clearSnackBars()
+      ..showSnackBar(SnackBar(content: Text(l.duplicateName)));
+    return;
+  }
+  setState(() => _habits.add(Habit(id: genId(), name: newName)));
+  _saveHabits();
+}
               },
             ),
     );
