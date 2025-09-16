@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/habit.dart';
+import '../../domain/habit.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:habit_tracker/l10n/generated/app_localizations.dart';
 

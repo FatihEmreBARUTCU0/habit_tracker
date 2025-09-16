@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/utils/validators.dart';
+import 'package:habit_tracker/core/utils/validators.dart';
 import 'package:habit_tracker/l10n/generated/app_localizations.dart';
 
 

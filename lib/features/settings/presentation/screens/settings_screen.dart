@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../services/app_settings.dart';
+import 'package:habit_tracker/core/settings/app_settings.dart';
+
 import 'package:habit_tracker/l10n/generated/app_localizations.dart';
 
 
