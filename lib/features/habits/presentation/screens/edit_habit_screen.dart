@@ -49,7 +49,7 @@ String? _validator(String? v) {
   final t = (v ?? '').trim();
   if (t == _original) {
     // Bu satır artık sadece build sırasında çalışır → güvenli
-    return AppLocalizations.of(context)!.noChange;
+    return AppLocalizations.of(context).noChange;
   }
   return null;
 }
@@ -74,7 +74,7 @@ String? _validator(String? v) {
 
   @override
   Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context)!;
+    final l = AppLocalizations.of(context);
 
     return Scaffold(
       appBar: AppBar(title: Text(l.editHabitTitle)),

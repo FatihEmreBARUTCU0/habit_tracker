@@ -7,6 +7,8 @@ import 'package:habit_tracker/features/habits/presentation/screens/habit_detail_
 import 'package:habit_tracker/features/settings/presentation/screens/settings_screen.dart';
 import 'package:habit_tracker/l10n/generated/app_localizations.dart';
 import 'package:habit_tracker/features/habits/presentation/habits_controller.dart';
+import 'package:habit_tracker/core/backup/import_service.dart';
+
 
 class HabitListScreen extends StatefulWidget {
   const HabitListScreen({super.key});
@@ -46,7 +48,7 @@ class _HabitListScreenState extends State<HabitListScreen> {
 
   Future<void> _goToEdit(BuildContext context, Habit habit) async {
     // PRE-AWAIT: context'ten ihtiyacın olanları al
-    final l = AppLocalizations.of(context)!;
+    final l = AppLocalizations.of(context);
     final c = context.read<HabitsController>();
     final messenger = ScaffoldMessenger.of(context);
 
@@ -83,7 +85,7 @@ class _HabitListScreenState extends State<HabitListScreen> {
 
 void _removeSelectedWithUndo(BuildContext context) async {
   final c = context.read<HabitsController>();
-  final l = AppLocalizations.of(context)!;
+  final l = AppLocalizations.of(context);
   final messenger = ScaffoldMessenger.of(context);
 
   if (_selected.isEmpty) {
@@ -128,17 +130,11 @@ void _removeSelectedWithUndo(BuildContext context) async {
 }
 
 
-  @override
-  void initState() {
-    super.initState();
-    // context'i senkron al, microtask'te sadece c'yi kullan
-    final c = context.read<HabitsController>();
-    Future.microtask(() => c.init());
-  }
+  
 
   @override
   Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context)!;
+    final l = AppLocalizations.of(context);
     final scheme = Theme.of(context).colorScheme;
     final c = context.watch<HabitsController>();
     final habits = c.items;
@@ -270,7 +266,7 @@ void _removeSelectedWithUndo(BuildContext context) async {
               label: Text(l.add),
               onPressed: () async {
                 // PRE-AWAIT: context'ten ihtiyaçlar
-                final l = AppLocalizations.of(context)!;
+                final l = AppLocalizations.of(context);
                 final c = context.read<HabitsController>();
                 final messenger = ScaffoldMessenger.of(context);
 
@@ -306,15 +302,92 @@ class _EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context)!;
+    final l = AppLocalizations.of(context);
+    final c = context.read<HabitsController>();
+    final messenger = ScaffoldMessenger.of(context);
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
-        child: Text(
-          l.noHabitsHint,
-          textAlign: TextAlign.center,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.inbox_outlined, size: 64),
+            const SizedBox(height: 12),
+            Text(l.noHabitsHint, textAlign: TextAlign.center),
+            const SizedBox(height: 16),
+
+            // ➕ Alışkanlık Ekle
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                icon: const Icon(Icons.add),
+                label: Text(l.addHabit),
+                onPressed: () async {
+                  final result = await Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const AddHabitScreen()),
+                  );
+                  if (result is String && result.trim().isNotEmpty) {
+                    final name = result.trim();
+                    final exists = c.items.any(
+                      (h) => h.name.trim().toLowerCase() == name.toLowerCase(),
+                    );
+                    if (exists) {
+                      messenger
+                        ..clearSnackBars()
+                        ..showSnackBar(SnackBar(content: Text(l.duplicateName)));
+                      return;
+                    }
+                    await c.addHabit(name);
+                  }
+                },
+              ),
+            ),
+            const SizedBox(height: 8),
+
+            // 📥 JSON’dan İçe Aktar
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                icon: const Icon(Icons.file_upload_outlined),
+                label: Text(l.importJsonFile),
+                onPressed: () async {
+                  try {
+                    final incoming = await ImportService().pickAndParse();
+
+                    if (incoming.isEmpty) {
+                      messenger
+                        ..clearSnackBars()
+                        ..showSnackBar(SnackBar(content: Text(l.importNothing)));
+                      return;
+                    }
+
+                    final res = await c.importHabits(incoming);
+
+                    messenger
+                      ..clearSnackBars()
+                      ..showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            (res.added + res.merged) == 0
+                              ? l.importNothing
+                              : l.importSuccess(res.added + res.merged),
+                          ),
+                        ),
+                      );
+                  } catch (_) {
+                    messenger
+                      ..clearSnackBars()
+                      ..showSnackBar(SnackBar(content: Text(l.invalidBackupFile)));
+                  }
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
+

@@ -11,6 +11,9 @@ import 'package:habit_tracker/features/habits/presentation/habits_controller.dar
 
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:habit_tracker/l10n/generated/app_localizations.dart';
+import 'package:habit_tracker/features/onboarding/start_gate.dart';
+import 'package:habit_tracker/features/onboarding/onboarding_screen.dart';
+
 
 final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
@@ -208,7 +211,11 @@ class MyApp extends StatelessWidget {
       ),
 
       themeMode: settings.themeMode,
-      home: const HabitListScreen(),
+      home: const StartGate(
+        home:  HabitListScreen(),
+        onboarding:  OnboardingScreen(),
+),
+
     );
   }
 }

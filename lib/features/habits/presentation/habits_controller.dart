@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:habit_tracker/features/habits/domain/habit.dart';
 import 'package:habit_tracker/features/habits/data/habits_repository.dart';
 import 'package:habit_tracker/core/utils/id_utils.dart';
+import 'package:habit_tracker/core/backup/import_service.dart';
 
 class HabitsController extends ChangeNotifier {
   final HabitsRepository repo;
@@ -57,4 +58,14 @@ class HabitsController extends ChangeNotifier {
     await repo.save(_items);
     notifyListeners();
   }
+
+Future<ImportResult> importHabits(List<Habit> incoming) async {
+  final svc = ImportService();
+  final res = svc.mergeInto(_items, incoming);
+  await repo.save(_items);
+  notifyListeners();
+  return res;
+}
+
+
 }

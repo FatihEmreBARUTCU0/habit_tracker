@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../domain/habit.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:habit_tracker/l10n/generated/app_localizations.dart';
+import 'package:intl/intl.dart';
 
 class HabitDetailScreen extends StatefulWidget {
   final Habit habit;
@@ -44,16 +45,15 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
     }).toList();
   }
 
-  // TR kısa gün etiketleri (şimdilik TR sabit; istersek sonra locale’e göre yaparız)
-  String _weekdayTrShort(DateTime d) {
-    // DateTime.weekday: 1=Mon ... 7=Sun
-    const names = ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'];
-    return names[d.weekday - 1];
-  }
+ String _weekdayShort(BuildContext context, DateTime d) {
+  final locale = AppLocalizations.of(context).localeName; // örn: 'tr', 'en'
+  return DateFormat.E(locale).format(d); // Pzt / Mon gibi
+}
+
 
   @override
   Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context)!;
+    final l = AppLocalizations.of(context);
 
     final last7 = _lastNDatesYmd(7); // bugün dahil geriye 6 gün = 7 gün
     final checks =
@@ -127,7 +127,7 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
                           return Padding(
                             padding: const EdgeInsets.only(top: 4.0),
                             child: Text(
-                              _weekdayTrShort(days[i]), // Pzt/Sal/Çar...
+                              _weekdayShort(context, days[i]) ,// Pzt/Sal/Çar...
                               style: const TextStyle(fontSize: 12),
                             ),
                           );
