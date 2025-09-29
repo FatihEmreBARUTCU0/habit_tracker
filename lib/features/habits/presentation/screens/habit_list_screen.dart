@@ -323,10 +323,12 @@ class _HabitListScreenState extends State<HabitListScreen> {
 
           // ✨ Segmented filter (GlassCard içinde)
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 10, 16, 8),
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
             child: GlassCard(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                radius: context.neon.radius + 8,
               child: SegmentedButton<int>(
+                showSelectedIcon: false,
                 segments: [
                   ButtonSegment(value: 0, label: Text(l.filterAll)),
                   ButtonSegment(value: 1, label: Text(l.filterActive)),
@@ -334,7 +336,7 @@ class _HabitListScreenState extends State<HabitListScreen> {
                 ],
                 selected: {_tab},
                 onSelectionChanged: (s) => setState(() => _tab = s.first),
-                showSelectedIcon: false,
+                
               ),
             ),
           ),

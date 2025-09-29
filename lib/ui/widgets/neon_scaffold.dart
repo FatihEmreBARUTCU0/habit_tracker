@@ -5,14 +5,16 @@ class NeonScaffold extends StatelessWidget {
   final PreferredSizeWidget? appBar;
   final Widget body;
   final Widget? floating;
-  final bool withTopGlow;
+
+  /// İstersen çok hafif kararma için aç (edge’lerde 2025 tarzı vignette).
+  final bool withVignette;
 
   const NeonScaffold({
     super.key,
     required this.body,
     this.appBar,
     this.floating,
-    this.withTopGlow = true,
+    this.withVignette = false,
   });
 
   @override
@@ -20,82 +22,39 @@ class NeonScaffold extends StatelessWidget {
     final n = context.neon;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Container(
-      color: n.baseBg, // #0B0F1F (dark) / #F6F2FF (light)
+    // Arka plan: referanstaki gibi sade, yumuşak bir dikey degrade.
+    final background = DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: isDark
+              ? const [Color(0xFF0B0F1F), Color(0xFF091226)]
+              : const [Color(0xFFF6F2FF), Color(0xFFF2FBFF)],
+        ),
+      ),
+    );
+
+    // Çok hafif vignette (isteğe bağlı) — mümkün olan yerlerde const
+    const vignette = IgnorePointer(
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          gradient: RadialGradient(
+            center: Alignment(0, -0.1), // const Alignment
+            radius: 1.15,
+            colors: [Colors.transparent, Color(0x1A000000)], // const liste
+            stops: [0.75, 1.0], // const liste
+          ),
+        ),
+      ),
+    );
+
+    return DecoratedBox( // Container->DecoratedBox (hafif)
+      decoration: BoxDecoration(color: n.baseBg),
       child: Stack(
         children: [
-          // 🔵 / 💜 daireler sadece light'ta kalsın
-          if (!isDark) ...[
-            // 🔵 Aqua-Teal leke (sol-alt) — küçült + opaklık
-            Positioned(
-              left: -140, bottom: -140,
-              child: IgnorePointer(
-                child: Opacity(
-                  opacity: 0.70, // daha yumuşak
-                  child: Container(
-                    width: 300, height: 300, // küçültüldü
-                    decoration: BoxDecoration(
-                      gradient: n.gradAquaTeal,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            // 💜 Pink-Violet leke (sağ-üst) — küçült + opaklık
-            if (withTopGlow)
-              Positioned(
-                right: -60, top: -70, // sahnenin dışına biraz daha yakın
-                child: IgnorePointer(
-                  child: Opacity(
-                    opacity: 0.55, // yumuşak
-                    child: Container(
-                      width: 220, height: 220, // küçültüldü
-                      decoration: BoxDecoration(
-                        gradient: n.gradPinkViolet,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-          ],
-
-          // 🌞 Light modda pastel degrade film (mevcut davranış korunur)
-          if (!isDark)
-            const Positioned.fill(
-              child: IgnorePointer(
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft, end: Alignment.bottomRight,
-                      colors: [Color(0xFFF6F2FF), Color(0xFFF2FBFF)],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-
-          // 🌙 Dark modda minimal degrade (yuvarlak yok)
-          if (isDark)
-            const Positioned.fill(
-              child: IgnorePointer(
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Color(0xFF0B0F1F), // üst
-                        Color(0xFF091226), // alt (bir ton daha koyu)
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-
-          // İçerik
+          Positioned.fill(child: background),
+          if (withVignette) const Positioned.fill(child: vignette),
           Scaffold(
             backgroundColor: Colors.transparent,
             extendBodyBehindAppBar: true,

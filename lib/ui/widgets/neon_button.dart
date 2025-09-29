@@ -23,18 +23,13 @@ class NeonButton extends StatelessWidget {
     final g = gradient ?? n.gradPinkViolet;
 
     final btn = DecoratedBox(
-      decoration: BoxDecoration(
-        gradient: g,
-        borderRadius: BorderRadius.circular(radius),
-        boxShadow: [
-          // yumuşak glow
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.20),
-
-            blurRadius: 24, spreadRadius: 1, offset: const Offset(0, 8),
-          ),
-        ],
-      ),
+  decoration: BoxDecoration(
+    gradient: g,
+    borderRadius: BorderRadius.circular(radius),
+    boxShadow: [
+      BoxShadow(color: context.neon.glow, blurRadius: 24, spreadRadius: 1, offset: const Offset(0,10)),
+    ],
+  ),
       child: ConstrainedBox(
         constraints: const BoxConstraints(minHeight: 48),
         child: Center(

@@ -9,13 +9,12 @@ import 'package:habit_tracker/core/backup/backup_service.dart';
 import 'package:habit_tracker/core/backup/import_service.dart';
 import 'package:habit_tracker/features/habits/presentation/habits_controller.dart';
 
-
-
-// ✨ Eklendi: Neon bileşenleri
+// ✨ Neon bileşenleri
 import 'package:habit_tracker/ui/widgets/neon_scaffold.dart';
 import 'package:habit_tracker/ui/widgets/neon_app_bar.dart';
 import 'package:habit_tracker/ui/widgets/glass_card.dart';
 import 'package:habit_tracker/ui/widgets/neon_button.dart';
+import 'package:habit_tracker/ui/widgets/neon_outline_card.dart'; // ✅ eklendi
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -44,7 +43,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(t.backup, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                  Text(
+                    t.backup,
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  ),
                   const SizedBox(height: 12),
 
                   // 1) Share
@@ -52,84 +54,88 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     text: t.exportJsonFile,
                     onPressed: () async {
                       if (c.items.isEmpty) {
-                        messenger..clearSnackBars()..showSnackBar(SnackBar(content: Text(t.nothingToExport)));
+                        messenger
+                          ..clearSnackBars()
+                          ..showSnackBar(SnackBar(content: Text(t.nothingToExport)));
                         return;
                       }
                       try {
                         await BackupService().shareBackup(c.items);
                         if (!mounted) return;
                         Navigator.of(context).pop();
-                        messenger..clearSnackBars()..showSnackBar(SnackBar(content: Text(t.sharedViaSystemSheet)));
+                        messenger
+                          ..clearSnackBars()
+                          ..showSnackBar(SnackBar(content: Text(t.sharedViaSystemSheet)));
                       } catch (_) {
                         if (!mounted) return;
                         Navigator.of(context).pop();
-                        messenger..clearSnackBars()..showSnackBar(SnackBar(content: Text(t.exportFailed)));
+                        messenger
+                          ..clearSnackBars()
+                          ..showSnackBar(SnackBar(content: Text(t.exportFailed)));
                       }
                     },
                   ),
                   const SizedBox(height: 8),
 
                   // 2) Download (picker ile)
-                 NeonButton(
-  text: t.downloadJsonFile,
-  onPressed: () async {
-    if (c.items.isEmpty) {
-      messenger
-        ..clearSnackBars()
-        ..showSnackBar(SnackBar(content: Text(t.nothingToExport)));
-      return;
-    }
-
-    try {
-      final svc = BackupService();
-      final saved = await svc.saveBackupWithPicker(c.items);
-      if (!mounted) return;
-
-      Navigator.of(context).pop();
-
-      messenger
-        ..clearSnackBars()
-        ..showSnackBar(
-          SnackBar(
-            content: Text(
-              saved == null ? t.backupFailed : '${t.savedToDownloads}\n$saved',
-            ),
-            action: saved == null
-                ? null
-                : SnackBarAction(
-                    label: t.openAction, // "Aç"
+                  NeonButton(
+                    text: t.downloadJsonFile,
                     onPressed: () async {
-                      final ok = await svc.tryOpen(saved);
-                      if (!ok && mounted) {
-                        // Açma başarısız → Paylaş fallback
+                      if (c.items.isEmpty) {
+                        messenger
+                          ..clearSnackBars()
+                          ..showSnackBar(SnackBar(content: Text(t.nothingToExport)));
+                        return;
+                      }
+
+                      try {
+                        final svc = BackupService();
+                        final saved = await svc.saveBackupWithPicker(c.items);
+                        if (!mounted) return;
+
+                        Navigator.of(context).pop();
+
                         messenger
                           ..clearSnackBars()
                           ..showSnackBar(
                             SnackBar(
-                              content: Text(t.cannotOpenFile), // "Bu cihazda dosya açılamadı."
-                              action: SnackBarAction(
-                                label: t.shareFile, // "Paylaş"
-                                onPressed: () async {
-                                  await svc.shareBackup(c.items);
-                                },
+                              content: Text(
+                                saved == null ? t.backupFailed : '${t.savedToDownloads}\n$saved',
                               ),
+                              action: saved == null
+                                  ? null
+                                  : SnackBarAction(
+                                      label: t.openAction, // "Aç"
+                                      onPressed: () async {
+                                        final ok = await svc.tryOpen(saved);
+                                        if (!ok && mounted) {
+                                          messenger
+                                            ..clearSnackBars()
+                                            ..showSnackBar(
+                                              SnackBar(
+                                                content: Text(t.cannotOpenFile),
+                                                action: SnackBarAction(
+                                                  label: t.shareFile, // "Paylaş"
+                                                  onPressed: () async {
+                                                    await svc.shareBackup(c.items);
+                                                  },
+                                                ),
+                                              ),
+                                            );
+                                        }
+                                      },
+                                    ),
                             ),
                           );
+                      } catch (_) {
+                        if (!mounted) return;
+                        Navigator.of(context).pop();
+                        messenger
+                          ..clearSnackBars()
+                          ..showSnackBar(SnackBar(content: Text(t.backupFailed)));
                       }
                     },
                   ),
-          ),
-        );
-    } catch (_) {
-      if (!mounted) return;
-      Navigator.of(context).pop();
-      messenger
-        ..clearSnackBars()
-        ..showSnackBar(SnackBar(content: Text(t.backupFailed)));
-    }
-  },
-),
-                  
                   const SizedBox(height: 8),
 
                   // 3) Import
@@ -142,24 +148,32 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                         if (incoming.isEmpty) {
                           Navigator.of(context).pop();
-                          messenger..clearSnackBars()..showSnackBar(SnackBar(content: Text(t.importNothing)));
+                          messenger
+                            ..clearSnackBars()
+                            ..showSnackBar(SnackBar(content: Text(t.importNothing)));
                           return;
                         }
 
                         final res = await c.importHabits(incoming);
                         if (!mounted) return;
                         Navigator.of(context).pop();
-                        messenger..clearSnackBars()..showSnackBar(
-                          SnackBar(content: Text(
-                            (res.added + res.merged) == 0
-                              ? t.importNothing
-                              : t.importSummary(res.added, res.merged),
-                          )),
-                        );
+                        messenger
+                          ..clearSnackBars()
+                          ..showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                (res.added + res.merged) == 0
+                                    ? t.importNothing
+                                    : t.importSummary(res.added, res.merged),
+                              ),
+                            ),
+                          );
                       } catch (_) {
                         if (!mounted) return;
                         Navigator.of(context).pop();
-                        messenger..clearSnackBars()..showSnackBar(SnackBar(content: Text(t.invalidBackupFile)));
+                        messenger
+                          ..clearSnackBars()
+                          ..showSnackBar(SnackBar(content: Text(t.invalidBackupFile)));
                       }
                     },
                   ),
@@ -171,7 +185,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     label: Text(t.previewJson),
                     onPressed: () async {
                       if (c.items.isEmpty) {
-                        messenger..clearSnackBars()..showSnackBar(SnackBar(content: Text(t.nothingToExport)));
+                        messenger
+                          ..clearSnackBars()
+                          ..showSnackBar(SnackBar(content: Text(t.nothingToExport)));
                         return;
                       }
                       final json = await BackupService().buildBackupJson(c.items);
@@ -183,8 +199,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         context: context,
                         builder: (_) => AlertDialog(
                           title: const Text('Backup JSON'),
-                          content: SingleChildScrollView(child: SelectableText(json, style: const TextStyle(fontSize: 12))),
-                          actions: [ TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(t.cancel)) ],
+                          content: SingleChildScrollView(
+                            child: SelectableText(
+                              json,
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(),
+                              child: Text(t.cancel),
+                            ),
+                          ],
                         ),
                       );
                     },
@@ -197,15 +223,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     label: Text(t.copyJson),
                     onPressed: () async {
                       if (c.items.isEmpty) {
-                        messenger..clearSnackBars()..showSnackBar(SnackBar(content: Text(t.nothingToExport)));
+                        messenger
+                          ..clearSnackBars()
+                          ..showSnackBar(SnackBar(content: Text(t.nothingToExport)));
                         return;
                       }
                       final json = await BackupService().buildBackupJson(c.items);
                       await Clipboard.setData(ClipboardData(text: json));
                       if (!mounted) return;
                       Navigator.of(context).pop();
-                      messenger..clearSnackBars()..showSnackBar(SnackBar(content: Text(t.jsonCopied)));
-
+                      messenger
+                        ..clearSnackBars()
+                        ..showSnackBar(SnackBar(content: Text(t.jsonCopied)));
                     },
                   ),
                 ],
@@ -230,9 +259,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          // ---------- GENEL (GlassCard) ----------
-          GlassCard(
+          // ---------- GENEL ----------
+          NeonOutlineCard(
+            margin: const EdgeInsets.only(bottom: 16),
             padding: const EdgeInsets.all(12),
+            radius: 22,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -286,11 +317,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
 
-          const SizedBox(height: 16),
-
-          // ---------- YEDEKLEME (GlassCard) ----------
-          GlassCard(
+          // ---------- YEDEKLEME ----------
+          NeonOutlineCard(
             padding: const EdgeInsets.all(12),
+            radius: 22,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -300,68 +330,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
                 const SizedBox(height: 8),
 
-                // ✅ Tek “JSON actions” satırı
+                // Tek “JSON actions” satırı
                 ListTile(
-                  leading: const Icon(Icons.auto_awesome), // task önerisi
+                  leading: const Icon(Icons.auto_awesome),
                   title: Text(t.jsonActions),
                   subtitle: Text(t.jsonActionsSub),
                   dense: true,
                   contentPadding: EdgeInsets.zero,
-                  onTap: _openJsonActionsSheet, // 👈 sınıf içi fonksiyon
+                  onTap: _openJsonActionsSheet,
                 ),
-
-                // ❌ Eski tekil satırlar — eksiltmemek için yorumladık
-                /*
-                // 1) JSON yedeğini paylaş (share sheet)
-                ListTile(
-                  leading: const Icon(Icons.ios_share_rounded),
-                  title: Text(t.exportJsonFile),
-                  subtitle: Text(t.exportJsonFileSub),
-                  dense: true,
-                  contentPadding: EdgeInsets.zero,
-                  onTap: () async { ... },
-                ),
-
-                // 2) JSON yedeğini indir (picker ile)
-                ListTile(
-                  leading: const Icon(Icons.download_rounded),
-                  title: Text(t.downloadJsonFile),
-                  subtitle: Text(t.downloadJsonFileSub),
-                  dense: true,
-                  contentPadding: EdgeInsets.zero,
-                  onTap: () async { ... },
-                ),
-
-                // 3) JSON yedeğini içe aktar
-                ListTile(
-                  leading: const Icon(Icons.file_download),
-                  title: Text(t.importJsonFile),
-                  subtitle: Text(t.importJsonFileSub),
-                  dense: true,
-                  contentPadding: EdgeInsets.zero,
-                  onTap: () async { ... },
-                ),
-
-                // 4) JSON önizle (dialog)
-                ListTile(
-                  leading: const Icon(Icons.visibility_outlined),
-                  title: Text(t.previewJson),
-                  subtitle: Text(t.previewJsonSub),
-                  dense: true,
-                  contentPadding: EdgeInsets.zero,
-                  onTap: () async { ... },
-                ),
-
-                // 5) JSON'u panoya kopyala (metin)
-                ListTile(
-                  leading: const Icon(Icons.copy_all_outlined),
-                  title: Text(t.copyJson),
-                  subtitle: Text(t.copyJsonSub),
-                  dense: true,
-                  contentPadding: EdgeInsets.zero,
-                  onTap: () async { ... },
-                ),
-                */
               ],
             ),
           ),
@@ -370,117 +347,3 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 }
-
-// ✅ Eski global fonksiyon — eksiltmemek için yorumladık; artık kullanılmıyor
-/*
-Future<void> showJsonActionsSheet(BuildContext ctx) async {
-  final t = AppLocalizations.of(ctx);
-  final messenger = ScaffoldMessenger.of(ctx);
-  final c = ctx.read<HabitsController>();
-
-  showModalBottomSheet(
-    context: ctx,
-    backgroundColor: Colors.transparent,
-    builder: (_) => Padding(
-      padding: const EdgeInsets.all(16),
-      child: GlassCard(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            NeonButton(
-              text: t.exportJsonFile,
-              onPressed: () async {
-                Navigator.pop(ctx);
-                if (c.items.isEmpty) {
-                  messenger..clearSnackBars()..showSnackBar(SnackBar(content: Text(t.nothingToExport)));
-                  return;
-                }
-                try {
-                  await BackupService().shareBackup(c.items);
-                  messenger..clearSnackBars()..showSnackBar(SnackBar(content: Text(t.sharedViaSystemSheet)));
-                } catch (_) {
-                  messenger..clearSnackBars()..showSnackBar(SnackBar(content: Text(t.exportFailed)));
-                }
-              },
-            ),
-            const SizedBox(height: 8),
-            NeonButton(
-              text: t.downloadJsonFile,
-              onPressed: () async {
-                Navigator.pop(ctx);
-                if (c.items.isEmpty) {
-                  messenger..clearSnackBars()..showSnackBar(SnackBar(content: Text(t.nothingToExport)));
-                  return;
-                }
-                try {
-                  final saved = await BackupService().saveBackupWithPicker(c.items);
-                  if (saved == null) {
-                    messenger..clearSnackBars()..showSnackBar(SnackBar(content: Text(t.backupFailed)));
-                    return;
-                  }
-                  messenger..clearSnackBars()..showSnackBar(SnackBar(content: Text('${t.savedToDownloads}\n$saved')));
-                } catch (_) {
-                  messenger..clearSnackBars()..showSnackBar(SnackBar(content: Text(t.backupFailed)));
-                }
-              },
-            ),
-            const SizedBox(height: 8),
-            NeonButton(
-              text: t.importJsonFile,
-              onPressed: () async {
-                Navigator.pop(ctx);
-                try {
-                  final incoming = await ImportService().pickAndParse();
-                  if (incoming.isEmpty) {
-                    messenger..clearSnackBars()..showSnackBar(SnackBar(content: Text(t.importNothing)));
-                    return;
-                  }
-                  final res = await c.importHabits(incoming);
-                  messenger..clearSnackBars()..showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        (res.added + res.merged) == 0
-                            ? t.importNothing
-                            : t.importSummary(res.added, res.merged),
-                      ),
-                    ),
-                  );
-                } catch (_) {
-                  messenger..clearSnackBars()..showSnackBar(SnackBar(content: Text(t.invalidBackupFile)));
-                }
-              },
-            ),
-            const SizedBox(height: 8),
-            OutlinedButton.icon(
-              icon: const Icon(Icons.visibility_outlined),
-              label: Text(t.previewJson),
-              onPressed: () async {
-                Navigator.pop(ctx);
-                if (c.items.isEmpty) {
-                  messenger..clearSnackBars()..showSnackBar(SnackBar(content: Text(t.nothingToExport)));
-                  return;
-                }
-                final json = await BackupService().buildBackupJson(c.items);
-                if (!ctx.mounted) return;
-                showDialog(
-                  context: ctx,
-                  builder: (_) => AlertDialog(
-                    title: const Text('Backup JSON'),
-                    content: SingleChildScrollView(
-                      child: SelectableText(json, style: const TextStyle(fontSize: 12)),
-                    ),
-                    actions: [
-                      TextButton(onPressed: () => Navigator.of(ctx).pop(), child: Text(t.cancel)),
-                    ],
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
-    ),
-  );
-}
-*/

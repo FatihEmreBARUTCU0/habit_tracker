@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/ui/widgets/glass_card.dart';
-import 'package:habit_tracker/ui/theme/neon_theme.dart';
+// import 'package:habit_tracker/ui/widgets/glass_card.dart'; // ❌ artık kullanılmıyor
+import 'package:habit_tracker/ui/widgets/neon_outline_card.dart'; // ✅ kullanılıyor
 import 'package:habit_tracker/features/habits/domain/habit.dart';
 import 'package:habit_tracker/l10n/generated/app_localizations.dart';
 
@@ -32,41 +32,62 @@ class NeonHabitTile extends StatelessWidget {
     this.onMore,
   });
 
+  // 1) Chip’i okunur yap (kontrast + kalınlık)
+  Widget _statusChip(BuildContext context, bool on, String onText, String offText) {
+    final cs = Theme.of(context).colorScheme;
+    final bool dark = Theme.of(context).brightness == Brightness.dark;
+
+    final Color bg = on
+        ? (dark ? cs.primary.withValues(alpha: 0.22) : cs.primary.withValues(alpha: 0.18))
+        : (dark ? cs.onSurface.withValues(alpha: 0.08) : cs.onSurface.withValues(alpha: 0.06));
+
+    final Color fg = on ? (dark ? cs.onPrimary : cs.primary) : cs.onSurfaceVariant;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(
+          color: on ? cs.primary.withValues(alpha: 0.35) : cs.outline.withValues(alpha: 0.25),
+        ),
+      ),
+      child: Text(
+        on ? onText : offText,
+        style: TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w700, // kalın
+          color: fg,
+          letterSpacing: .1,
+        ),
+      ),
+    );
+  }
+
+  // 2) Sade avatar
+  Widget leftAvatar(BuildContext context, bool on) {
+    final cs = Theme.of(context).colorScheme;
+    return Container(
+      width: 40, height: 40,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: on ? cs.primary : cs.surfaceContainerHighest,
+        border: Border.all(color: cs.outline.withValues(alpha: 0.30)),
+      ),
+      child: Icon(
+        on ? Icons.check_rounded : Icons.circle_outlined,
+        color: on ? cs.onPrimary : cs.onSurfaceVariant,
+        size: 20,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final scheme = Theme.of(context).colorScheme;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final n = context.neon;
 
-    final fg = scheme.onSurface;                 // ana yazı rengi
-    final fgWeak = fg.withValues(alpha: isDark ? 0.8 : 0.65);
-
-    Widget leftAvatar() {
-      // Pastel neon halka (mockup benzeri)
-      return Container(
-        width: 44,
-        height: 44,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          gradient: n.gradPinkViolet,
-        ),
-        child: Container(
-          margin: const EdgeInsets.all(3),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: isDark
-                ? Colors.black.withValues(alpha: 0.25)
-                : Colors.white.withValues(alpha: 0.85),
-          ),
-          child: Icon(
-            checkedToday ? Icons.check_rounded : Icons.circle_outlined,
-            color: isDark ? Colors.white : scheme.primary,
-            size: 22,
-          ),
-        ),
-      );
-    }
+    final fg = scheme.onSurface; // ana yazı rengi
 
     final title = Text(
       habit.name,
@@ -77,29 +98,13 @@ class NeonHabitTile extends StatelessWidget {
       overflow: TextOverflow.ellipsis,
     );
 
-    // 4) “Bugün” durumu için minik status chip
-    final subtitleRow = Row(
-      children: [
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-          decoration: BoxDecoration(
-            // DEPRECATION FIX: withOpacity -> withValues(alpha: ...)
-            color: (checkedToday ? Colors.green : fgWeak)
-                .withValues(alpha: checkedToday ? .18 : .12),
-            borderRadius: BorderRadius.circular(999),
-          ),
-          child: Text(
-            checkedToday ? l.todaySubtitleOn : l.todaySubtitleOff,
-            style: TextStyle(
-              fontSize: 11,
-              color: checkedToday ? Colors.green : fgWeak,
-            ),
-          ),
-        ),
-      ],
-    );
+    // Chip: _statusChip ile oluşturuluyor
+    final subtitle = _statusChip(context, checkedToday, l.todaySubtitleOn, l.todaySubtitleOff);
 
-    // 3) Trailing: sadece ✓ ve ⋯
+    // 4) İkon renkleri: tek renge sabitle
+    final iconColor = Theme.of(context).colorScheme.onSurface;
+
+    // Trailing: sadece ✓ ve ⋯
     final trailing = Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -108,13 +113,13 @@ class NeonHabitTile extends StatelessWidget {
           icon: Icon(
             checkedToday ? Icons.check_circle : Icons.circle_outlined,
             size: 20,
-            color: fg,
+            color: iconColor,
           ),
           onPressed: onToggleToday,
         ),
         IconButton(
           tooltip: l.more,
-          icon: Icon(Icons.more_vert, size: 20, color: fg),
+          icon: Icon(Icons.more_vert, size: 20, color: iconColor),
           onPressed: onMore,
         ),
       ],
@@ -133,7 +138,7 @@ class NeonHabitTile extends StatelessWidget {
                 FadeTransition(opacity: anim, child: child),
             child: KeyedSubtree(
               key: ValueKey<bool>(checkedToday),
-              child: subtitleRow,
+              child: subtitle,
             ),
           ),
         ],
@@ -142,7 +147,7 @@ class NeonHabitTile extends StatelessWidget {
 
     final core = Row(
       children: [
-        leftAvatar(),
+        leftAvatar(context, checkedToday),
         const SizedBox(width: 12),
         Expanded(child: textColumn),
         const SizedBox(width: 8),
@@ -155,36 +160,54 @@ class NeonHabitTile extends StatelessWidget {
       ],
     );
 
-    // 8) Erişilebilirlik: Semantics
-    return Semantics(
-      label:
-          '${habit.name} — ${checkedToday ? l.todaySubtitleOn : l.todaySubtitleOff}',
+    // ✅ Dış sarmalayıcı: NeonOutlineCard + InkWell (tıklama davranışı)
+    final tile = Semantics(
+      label: '${habit.name} — ${checkedToday ? l.todaySubtitleOn : l.todaySubtitleOff}',
       button: true,
       child: GestureDetector(
         onLongPress: onLongPress, // seçim moduna geçiş için dışarıdan geliyor
-        child: GlassCard(
-          padding: const EdgeInsets.all(12),
+        child: NeonOutlineCard(
           margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          onTap: selectionMode ? onTapSelect : null,
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 250),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              // 6) Kart gölgelerini yumuşat — DEPRECATION FIX
-              boxShadow: selected
-                  ? [
-                      BoxShadow(
-                        color: Colors.white.withValues(alpha: 0.18),
-                        blurRadius: 16,
-                        spreadRadius: .5,
-                      )
-                    ]
-                  : const [],
+          padding: const EdgeInsets.all(12),
+          radius: 22,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(22),
+            onTap: selectionMode ? onTapSelect : null,
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 250),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                // İç arka plan nötr: sadece opsiyonel hafif gölge
+                boxShadow: selected
+                    ? [
+                        BoxShadow(
+                          color: Colors.white.withValues(alpha: .16),
+                          blurRadius: 14,
+                          spreadRadius: .4,
+                        ),
+                      ]
+                    : const [],
+              ),
+              child: core,
             ),
-            child: core,
           ),
         ),
       ),
+    );
+
+    // Giriş animasyonu: hafif aşağıdan süzülme + opaklık
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0.05, end: 0.0),
+      duration: const Duration(milliseconds: 380),
+      curve: Curves.easeOutCubic,
+      builder: (ctx, v, child) => Transform.translate(
+        offset: Offset(0, 24 * v),
+        child: Opacity(
+          opacity: 1 - v * 8, // 1 -> ~0.6 arasında hızlıca görünür olur
+          child: child,
+        ),
+      ),
+      child: tile,
     );
   }
 }

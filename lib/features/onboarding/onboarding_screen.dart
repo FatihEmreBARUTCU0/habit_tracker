@@ -44,7 +44,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     ];
 
     return NeonScaffold(
-      withTopGlow: true,
+      
       body: SafeArea(
         child: Column(
           children: [
