@@ -560,6 +560,12 @@ abstract class AppLocalizations {
   /// **'Use for quick testing without apps'**
   String get copyJsonSub;
 
+  /// No description provided for @jsonCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'JSON copied to clipboard'**
+  String get jsonCopied;
+
   /// No description provided for @importDetail.
   ///
   /// In en, this message translates to:
@@ -571,6 +577,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{added} new, {merged} merged'**
   String importSummary(int added, int merged);
+
+  /// Title for the sheet that groups all JSON actions in Settings > Backup
+  ///
+  /// In en, this message translates to:
+  /// **'JSON actions'**
+  String get jsonActions;
+
+  /// Short hint for the JSON actions sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Export / download / import / preview'**
+  String get jsonActionsSub;
+
+  /// No description provided for @filterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get filterAll;
+
+  /// No description provided for @filterActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get filterActive;
+
+  /// No description provided for @filterToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today ✓'**
+  String get filterToday;
+
+  /// No description provided for @todaySubtitleOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Today ✓'**
+  String get todaySubtitleOn;
+
+  /// No description provided for @todaySubtitleOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Not checked'**
+  String get todaySubtitleOff;
+
+  /// No description provided for @deleteOne.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get deleteOne;
+
+  /// No description provided for @more.
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get more;
 }
 
 class _AppLocalizationsDelegate

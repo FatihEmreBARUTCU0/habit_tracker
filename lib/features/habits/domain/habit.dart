@@ -1,3 +1,4 @@
+import 'package:habit_tracker/core/utils/date_utils.dart' as dtu;
 
 class Habit {
   final String id;
@@ -22,10 +23,10 @@ class Habit {
   }
 
   // bugünün işaret durumu
-  bool get isCheckedToday => history[_todayYmd()] == true;
+ bool get isCheckedToday => history[dtu.todayYmd()] == true;
 
   void toggleToday() {
-    final t = _todayYmd();
+     final t = dtu.todayYmd();
     if (history[t] == true) {
       history.remove(t);
     } else {
@@ -61,10 +62,4 @@ class Habit {
   }
 }
 
-String _todayYmd() {
-  final now = DateTime.now();
-  final m = now.month.toString().padLeft(2, '0');
-  final d = now.day.toString().padLeft(2, '0');
-  return '${now.year}-$m-$d';
-}
 

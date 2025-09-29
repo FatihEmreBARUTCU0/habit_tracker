@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/core/utils/validators.dart';
 import 'package:habit_tracker/l10n/generated/app_localizations.dart';
-
-
-
+import 'package:habit_tracker/ui/widgets/neon_scaffold.dart';
+import 'package:habit_tracker/ui/widgets/neon_app_bar.dart';
+import 'package:habit_tracker/ui/widgets/glass_card.dart';
+import 'package:habit_tracker/ui/widgets/neon_button.dart';
 
 class AddHabitScreen extends StatefulWidget {
   const AddHabitScreen({super.key});
@@ -25,7 +26,7 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
   }
 
   void _onChanged(String v) {
-     final ok = validateHabitName(context)(v) == null;
+    final ok = validateHabitName(context)(v) == null;
     if (ok != _canSave) setState(() => _canSave = ok);
     // Sadece butonu aktif/pasif etmek için; asıl kontrol _validator'da.
   }
@@ -46,33 +47,41 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
 
-    return Scaffold(
-      appBar: AppBar(title: Text(l.addHabitTitle)),
+    return NeonScaffold(
+      appBar: NeonAppBar(title: Text(l.addHabitTitle),
+       leading: const BackButton(color: Colors.white)
+       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(
           key: _formKey,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              TextFormField(
-                controller: _controller,
-                textInputAction: TextInputAction.done,
-                onChanged: _onChanged,
-                onFieldSubmitted: (_) => _save(),
-                decoration: InputDecoration(
-                  labelText: l.habitName,
-                  hintText: l.habitNameHint,
-                  border: const OutlineInputBorder(),
+              // FIELD -> GlassCard içine alındı
+              GlassCard(
+                padding: const EdgeInsets.all(16),
+                child: TextFormField(
+                  controller: _controller,
+                  textInputAction: TextInputAction.done,
+                  onChanged: _onChanged,
+                  onFieldSubmitted: (_) => _save(),
+                  decoration: InputDecoration(
+                    labelText: l.habitName,
+                    hintText: l.habitNameHint,
+                    border: const OutlineInputBorder(),
+                  ),
+                  validator: validateHabitName(context),
                 ),
-                validator: validateHabitName(context),
               ),
               const SizedBox(height: 12),
+              // CTA -> NeonButton olarak değiştirildi (tam genişlik için SizedBox korundu)
               SizedBox(
                 width: double.infinity,
-                child: ElevatedButton(
+                child: NeonButton(
+                  text: l.save,
                   onPressed: _canSave ? _save : null,
-                  child: Text(l.save),
                 ),
               ),
             ],

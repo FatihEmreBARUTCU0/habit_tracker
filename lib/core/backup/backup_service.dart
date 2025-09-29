@@ -9,6 +9,7 @@ import 'package:file_saver/file_saver.dart';
 import 'package:open_filex/open_filex.dart';
 
 
+
 String _encodePretty(Map<String, dynamic> p) =>
     const JsonEncoder.withIndent('  ').convert(p);
 
@@ -24,6 +25,16 @@ Future<String> _buildAndEncode(List<Habit> items) async {
 }
 
 class BackupService {
+  Future<bool> tryOpen(String pathOrUri) async {
+      try {
+          final res = await OpenFilex.open(pathOrUri);
+          return res.type == ResultType.done;
+          } catch (_) {
+            return false;
+            }
+            }
+
+
   Future<XFile?> shareBackup(List<Habit> items, {String? fileName}) async {
     if (items.isEmpty) return null;
 

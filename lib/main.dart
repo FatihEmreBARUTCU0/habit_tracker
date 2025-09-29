@@ -14,6 +14,10 @@ import 'package:habit_tracker/l10n/generated/app_localizations.dart';
 import 'package:habit_tracker/features/onboarding/start_gate.dart';
 import 'package:habit_tracker/features/onboarding/onboarding_screen.dart';
 
+// ✨ NeonTheme eklentisi
+import 'package:habit_tracker/ui/theme/neon_theme.dart';
+import 'package:flutter/foundation.dart';
+import 'debug/frame_stats.dart';
 
 final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
@@ -35,6 +39,8 @@ Future<void> showTestNotificationIn5s() async {
     payload: 'test',
   );
 }
+
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -59,7 +65,9 @@ Future<void> main() async {
     ),
   );
 
-  await showTestNotificationIn5s();
+   if (!kReleaseMode) {
+   await showTestNotificationIn5s();
+ }
 
   // Settings
   final settings = await AppSettings.load();
@@ -67,6 +75,13 @@ Future<void> main() async {
   // Habits repo + controller
   final prefs = await SharedPreferences.getInstance();
   final repo  = HabitsRepository(prefs);
+
+if (!kReleaseMode) {
+   //FrameStats.I.start();
+  Future.delayed(const Duration(seconds: 15), () {
+    FrameStats.I.stopAndPrint(label: 'Home idle+scroll');
+  });
+}
 
   runApp(
     MultiProvider(
@@ -86,8 +101,8 @@ class MyApp extends StatelessWidget {
 
   static const Color _primary = Color(0xFF7C3AED);
   static const Color _secondary = Color(0xFFFF4D8D);
-  static const Color _bg = Color(0xFFFBF4FF);
-  static const Color _bgDark = Color(0xFF0F0D14);
+     // mevcut light arka planın (artık altta override ediyoruz)
+  static const Color _bgDark = Color(0xFF0F0D14);    // mevcut dark surface (artık altta override ediyoruz)
 
   @override
   Widget build(BuildContext context) {
@@ -127,6 +142,7 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      showPerformanceOverlay: false,
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -136,10 +152,16 @@ class MyApp extends StatelessWidget {
       supportedLocales: const [Locale('tr'), Locale('en')],
       locale: settings.locale,
 
+      // ✅ LIGHT THEME
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: scheme,
-        scaffoldBackgroundColor: _bg,
+        // ✨ İSTENEN: Light arka plan #F6F2FF
+        scaffoldBackgroundColor: const Color(0xFFF6F2FF),
+        // ✨ NeonTheme eklentisi
+        extensions: <ThemeExtension<dynamic>>[
+          NeonTheme.light,
+        ],
         appBarTheme: AppBarTheme(
           backgroundColor: scheme.primary,
           foregroundColor: scheme.onPrimary,
@@ -173,15 +195,24 @@ class MyApp extends StatelessWidget {
         ),
       ),
 
+      // ✅ DARK THEME
       darkTheme: ThemeData(
         useMaterial3: true,
         colorScheme: darkScheme,
-        scaffoldBackgroundColor: darkScheme.surface,
+        // ✨ İSTENEN: Dark arka plan #0B0F1F
+        scaffoldBackgroundColor: const Color(0xFF0B0F1F),
+        // ✨ NeonTheme eklentisi
+        extensions: const <ThemeExtension<dynamic>>[
+          NeonTheme.dark,
+        ],
+        // ✨ AppBar’ı hafif şeffaflaştır
         appBarTheme: AppBarTheme(
-          backgroundColor: darkScheme.primary,
+          // .withOpacity deprecated → .withValues(alpha: …)
+          backgroundColor: darkScheme.surface.withValues(alpha: 0.10),
+          surfaceTintColor: Colors.transparent,
+          elevation: 0,
           foregroundColor: darkScheme.onPrimary,
           centerTitle: true,
-          elevation: 1.5,
           titleTextStyle: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w700,
@@ -214,8 +245,7 @@ class MyApp extends StatelessWidget {
       home: const StartGate(
         home:  HabitListScreen(),
         onboarding:  OnboardingScreen(),
-),
-
+      ),
     );
   }
 }

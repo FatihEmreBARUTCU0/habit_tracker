@@ -127,6 +127,7 @@
   "previewJsonSub": "View the JSON text in a dialog",
   "copyJson": "Copy JSON to clipboard",
   "copyJsonSub": "Use for quick testing without apps",
+  "jsonCopied": "JSON copied to clipboard",
 
   "importDetail": "{added} added, {merged} merged",
   "@importDetail": {
@@ -142,5 +143,24 @@
       "added": { "type": "int", "example": "2" },
       "merged": { "type": "int", "example": "3" }
     }
-  }
+  },
+
+  "jsonActions": "JSON actions",
+  "@jsonActions": {
+    "description": "Title for the sheet that groups all JSON actions in Settings > Backup"
+  },
+  "jsonActionsSub": "Export / download / import / preview",
+  "@jsonActionsSub": {
+    "description": "Short hint for the JSON actions sheet"
+  },
+
+ 
+
+  "filterAll": "All",
+  "filterActive": "Active",
+  "filterToday": "Today ✓",
+  "todaySubtitleOn": "Today ✓",
+  "todaySubtitleOff": "Not checked",
+  "deleteOne": "Delete",
+  "more": "More"
 }

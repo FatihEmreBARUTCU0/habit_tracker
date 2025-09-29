@@ -254,6 +254,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get copyJsonSub => 'Uygulama olmadan hızlı test için';
 
   @override
+  String get jsonCopied => 'JSON panoya kopyalandı';
+
+  @override
   String importDetail(int added, int merged) {
     return '$added yeni, $merged birleştirildi';
   }
@@ -262,4 +265,31 @@ class AppLocalizationsTr extends AppLocalizations {
   String importSummary(int added, int merged) {
     return '$added yeni, $merged birleştirildi';
   }
+
+  @override
+  String get jsonActions => 'JSON İşlemleri';
+
+  @override
+  String get jsonActionsSub => 'Dışa aktar / indir / içe al / önizle';
+
+  @override
+  String get filterAll => 'Tümü';
+
+  @override
+  String get filterActive => 'Aktif';
+
+  @override
+  String get filterToday => 'Bugün ✓';
+
+  @override
+  String get todaySubtitleOn => 'Bugün ✓';
+
+  @override
+  String get todaySubtitleOff => 'Bugün işaretlenmedi';
+
+  @override
+  String get deleteOne => 'Sil';
+
+  @override
+  String get more => 'Daha fazla';
 }

@@ -252,6 +252,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get copyJsonSub => 'Use for quick testing without apps';
 
   @override
+  String get jsonCopied => 'JSON copied to clipboard';
+
+  @override
   String importDetail(int added, int merged) {
     return '$added added, $merged merged';
   }
@@ -260,4 +263,31 @@ class AppLocalizationsEn extends AppLocalizations {
   String importSummary(int added, int merged) {
     return '$added new, $merged merged';
   }
+
+  @override
+  String get jsonActions => 'JSON actions';
+
+  @override
+  String get jsonActionsSub => 'Export / download / import / preview';
+
+  @override
+  String get filterAll => 'All';
+
+  @override
+  String get filterActive => 'Active';
+
+  @override
+  String get filterToday => 'Today ✓';
+
+  @override
+  String get todaySubtitleOn => 'Today ✓';
+
+  @override
+  String get todaySubtitleOff => 'Not checked';
+
+  @override
+  String get deleteOne => 'Delete';
+
+  @override
+  String get more => 'More';
 }

@@ -126,6 +126,7 @@
   "previewJsonSub": "JSON metnini bir pencerede göster",
   "copyJson": "JSON’u panoya kopyala",
   "copyJsonSub": "Uygulama olmadan hızlı test için",
+  "jsonCopied": "JSON panoya kopyalandı",
 
   "importDetail": "{added} yeni, {merged} birleştirildi",
   "@importDetail": {
@@ -141,5 +142,30 @@
       "added": { "type": "int", "example": "2" },
       "merged": { "type": "int", "example": "3" }
     }
-  }
+  },
+  
+ "jsonActions": "JSON İşlemleri",
+  "@jsonActions": {
+    "description": "Settings > Backup bölümünde bütün JSON aksiyonlarını açan sheet'in başlığı"
+  },
+  "jsonActionsSub": "Dışa aktar / indir / içe al / önizle",
+  "@jsonActionsSub": {
+    "description": "JSON sheet'i için kısa açıklama"
+  },
+
+
+
+
+  "filterAll": "Tümü",
+  "filterActive": "Aktif",
+  "filterToday": "Bugün ✓",
+  "todaySubtitleOn": "Bugün ✓",
+  "todaySubtitleOff": "Bugün işaretlenmedi",
+  "deleteOne": "Sil",
+
+  "more": "Daha fazla",
+"@more": { "description": "Overflow menu tooltip (⋯)" }
+
 }
+
+

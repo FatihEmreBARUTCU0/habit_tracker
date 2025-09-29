@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/core/utils/validators.dart';
 import 'package:habit_tracker/l10n/generated/app_localizations.dart';
-
-
-
+import 'package:habit_tracker/ui/widgets/neon_scaffold.dart';
+import 'package:habit_tracker/ui/widgets/neon_app_bar.dart';
+import 'package:habit_tracker/ui/widgets/glass_card.dart';
+import 'package:habit_tracker/ui/widgets/neon_button.dart';
 
 class EditHabitScreen extends StatefulWidget {
   const EditHabitScreen({super.key, required this.initialName});
-
   final String initialName;
 
   @override
@@ -20,40 +20,35 @@ class _EditHabitScreenState extends State<EditHabitScreen> {
   final _formKey = GlobalKey<FormState>();
   bool _canSave = false;
 
-@override
-void initState() {
-  super.initState();
-  _original = widget.initialName.trim();
-  _controller = TextEditingController(text: widget.initialName);
-  _canSave = _isValidInitial(_controller.text);
+  @override
+  void initState() {
+    super.initState();
+    _original = widget.initialName.trim();
+    _controller = TextEditingController(text: widget.initialName);
+    _canSave = _isValidInitial(_controller.text);
 
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    if (!mounted) return;
-    final ok = _validator(_controller.text) == null;
-    if (ok != _canSave) setState(() => _canSave = ok);
-  });
-}
-
-
-// initState için hızlı, context'siz kontrol
-bool _isValidInitial(String? v) {
-  final t = (v ?? '').trim();
-  return t.isNotEmpty && t != _original;
-}
-
-
-String? _validator(String? v) {
-  final base = validateHabitName(context)(v);     // Boş olamaz vb.
-  if (base != null) return base;
-
-  final t = (v ?? '').trim();
-  if (t == _original) {
-    // Bu satır artık sadece build sırasında çalışır → güvenli
-    return AppLocalizations.of(context).noChange;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final ok = _validator(_controller.text) == null;
+      if (ok != _canSave) setState(() => _canSave = ok);
+    });
   }
-  return null;
-}
 
+  bool _isValidInitial(String? v) {
+    final t = (v ?? '').trim();
+    return t.isNotEmpty && t != _original;
+  }
+
+  String? _validator(String? v) {
+    final base = validateHabitName(context)(v);
+    if (base != null) return base;
+
+    final t = (v ?? '').trim();
+    if (t == _original) {
+      return AppLocalizations.of(context).noChange;
+    }
+    return null;
+  }
 
   void _onChanged(String v) {
     final ok = _validator(v) == null;
@@ -76,38 +71,40 @@ String? _validator(String? v) {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
 
-    return Scaffold(
-      appBar: AppBar(title: Text(l.editHabitTitle)),
+    return NeonScaffold(
+      appBar: NeonAppBar(
+        title: Text(l.editHabitTitle),
+        leading: const BackButton(color: Colors.white),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _controller,
-                textInputAction: TextInputAction.done,
-                onChanged: _onChanged,
-                onFieldSubmitted: (_) => _save(),
-                decoration:  InputDecoration(
-                  labelText: l.newName,
-                  hintText:  l.newNameHint,
-                  border: const OutlineInputBorder(),
-                ),
-                validator: _validator,
-              ),
-              const SizedBox(height: 12),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _canSave ? _save : null,
-                  child: Text(l.update),
-
+        child: Column(
+          children: [
+            GlassCard(
+              padding: const EdgeInsets.all(16),
+              child: Form(
+                key: _formKey,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                child: TextFormField(
+                  controller: _controller,
+                  textInputAction: TextInputAction.done,
+                  onChanged: _onChanged,
+                  onFieldSubmitted: (_) => _save(),
+                  decoration: InputDecoration(
+                    labelText: l.newName,
+                    hintText: l.newNameHint,
+                    border: const OutlineInputBorder(),
+                  ),
+                  validator: _validator,
                 ),
               ),
-            ],
-          ),
+            ),
+            const SizedBox(height: 12),
+            NeonButton(
+              text: l.update,
+              onPressed: _canSave ? _save : null,
+            ),
+          ],
         ),
       ),
     );
