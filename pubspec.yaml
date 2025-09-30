@@ -10,6 +10,9 @@ dependencies:
   flutter:
     sdk: flutter
 
+ # Google Fonts
+  google_fonts: ^6.2.1
+
   # Yerelleştirme
   flutter_localizations:
     sdk: flutter

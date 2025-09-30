@@ -83,6 +83,33 @@
     }
   },
 
+  "reorder": "Reorder",
+  "done": "Done",
+
+  "todayProgress": "Today {done}/{total} completed",
+  "@todayProgress": {
+    "placeholders": {
+      "done": { "type": "int", "example": "3" },
+      "total": { "type": "int", "example": "5" }
+    }
+  },
+
+  "streakLabel": "Current streak: {count} days",
+  "@streakLabel": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "streakCurrent": "Current streak: {count} days",
+  "streakBest": "Best streak: {count} days",
+  "@streakCurrent": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "@streakBest": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+
   "toggleTodayOn": "Mark Today ✓",
   "toggleTodayOff": "Today ✓ (Undo)",
   "update": "Update",
@@ -154,8 +181,7 @@
     "description": "Short hint for the JSON actions sheet"
   },
 
- 
-
+  "backupJsonTitle": "Backup JSON",
   "filterAll": "All",
   "filterActive": "Active",
   "filterToday": "Today ✓",

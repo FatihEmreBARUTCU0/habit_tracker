@@ -146,6 +146,32 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
+  String get reorder => 'Sırala';
+
+  @override
+  String get done => 'Bitti';
+
+  @override
+  String todayProgress(int done, int total) {
+    return 'Bugün $done/$total tamamlandı';
+  }
+
+  @override
+  String streakLabel(int count) {
+    return 'Seri: $count gün';
+  }
+
+  @override
+  String streakCurrent(int count) {
+    return 'Güncel seri: $count gün';
+  }
+
+  @override
+  String streakBest(int count) {
+    return 'En iyi seri: $count gün';
+  }
+
+  @override
   String get toggleTodayOn => 'Bugün ✓ İşaretle';
 
   @override
@@ -271,6 +297,9 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get jsonActionsSub => 'Dışa aktar / indir / içe al / önizle';
+
+  @override
+  String get backupJsonTitle => 'JSON Yedeği';
 
   @override
   String get filterAll => 'Tümü';

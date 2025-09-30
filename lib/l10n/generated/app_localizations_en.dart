@@ -145,6 +145,32 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get reorder => 'Reorder';
+
+  @override
+  String get done => 'Done';
+
+  @override
+  String todayProgress(int done, int total) {
+    return 'Today $done/$total completed';
+  }
+
+  @override
+  String streakLabel(int count) {
+    return 'Current streak: $count days';
+  }
+
+  @override
+  String streakCurrent(int count) {
+    return 'Current streak: $count days';
+  }
+
+  @override
+  String streakBest(int count) {
+    return 'Best streak: $count days';
+  }
+
+  @override
   String get toggleTodayOn => 'Mark Today ✓';
 
   @override
@@ -269,6 +295,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get jsonActionsSub => 'Export / download / import / preview';
+
+  @override
+  String get backupJsonTitle => 'Backup JSON';
 
   @override
   String get filterAll => 'All';

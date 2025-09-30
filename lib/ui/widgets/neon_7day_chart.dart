@@ -15,33 +15,48 @@ class Neon7DayChart extends StatelessWidget {
   })  : assert(weekdayShort.length == 7),
         assert(checks.length == 7);
 
-  Color _barColor(int i, bool on) {
-    const Color start = Color(0xFFFF72E1);
-    const Color end   = Color(0xFFA16BFE);
-    final t = i / 6.0;
-    final mix = Color.lerp(start, end, t)!;
-    return on ? mix : mix.withValues(alpha: 0.28);
-  }
-
   @override
   Widget build(BuildContext context) {
-    final values = checks.map((e) => e ? 1.0 : 0.0).toList();
+    final cs = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    // ——— Palette (dark & light) ———
+    // Aktif bar degrade taban/tepe tonları
+    final Color onA = isDark
+        ? const Color(0xFFB68CFF) // dark: alt ton (plum)
+        : const Color(0xFFFFCBA6); // light: alt ton (rich peach)
+
+    final Color onB = isDark
+        ? const Color(0xFFFF96E5) // dark: üst ton (magenta/pink)
+        : const Color(0xFFFF9FD2); // light: üst ton (peach→pink highlight)
+
+    // Pasif bar şeffaflığı
+    final double offAlpha = isDark ? 0.22 : 0.26;
+
+    // Etiket rengi (alt eksen gün kısaltmaları)
+    final Color tick = cs.onSurface.withValues(alpha: isDark ? 0.70 : 0.60);
+    // (isteğe bağlı) ince grid çizgisi rengi
+    final Color guide = (isDark ? Colors.white : Colors.black).withValues(alpha: 0.05);
+
+    final values = checks.map((e) => e ? 1.0 : 0.001).toList();
 
     return BarChart(
       BarChartData(
         minY: 0,
         maxY: 1,
 
-        // fl_chart 0.68.0: BU İKİSİ CONST DEĞİL → const KULLANMA
-        // ignore: prefer_const_constructors
-        gridData: FlGridData(show: false),
-        // ignore: prefer_const_constructors
+        // Çerçeve/grid sade
+        gridData: FlGridData(
+          show: true,
+          drawVerticalLine: false,
+          getDrawingHorizontalLine: (value) => FlLine(color: guide, strokeWidth: 1),
+          checkToShowHorizontalLine: (value) => value == 0 || value == 1,
+        ),
         borderData: FlBorderData(show: false),
 
         barTouchData: BarTouchData(enabled: false),
 
         titlesData: FlTitlesData(
-          // Bunlar genelde const destekliyor; sende hata vermezse const bırak
           leftTitles:  const AxisTitles(sideTitles: SideTitles(showTitles: false)),
           topTitles:   const AxisTitles(sideTitles: SideTitles(showTitles: false)),
           rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
@@ -51,14 +66,12 @@ class Neon7DayChart extends StatelessWidget {
               reservedSize: 22,
               getTitlesWidget: (value, meta) {
                 final i = value.toInt();
-                if (i < 0 || i >= weekdayShort.length) {
-                  return const SizedBox.shrink();
-                }
+                if (i < 0 || i >= weekdayShort.length) return const SizedBox.shrink();
                 return Padding(
                   padding: const EdgeInsets.only(top: 4),
                   child: Text(
                     weekdayShort[i],
-                    style: const TextStyle(fontSize: 11),
+                    style: TextStyle(fontSize: 11, color: tick, fontWeight: FontWeight.w600),
                   ),
                 );
               },
@@ -67,7 +80,10 @@ class Neon7DayChart extends StatelessWidget {
         ),
 
         barGroups: List.generate(values.length, (i) {
-          final on = checks[i];
+          final bool on = checks[i];
+          final Color a = on ? onA : onA.withValues(alpha: offAlpha);
+          final Color b = on ? onB : onB.withValues(alpha: offAlpha);
+
           return BarChartGroupData(
             x: i,
             barRods: [
@@ -78,7 +94,14 @@ class Neon7DayChart extends StatelessWidget {
                   topLeft: Radius.circular(6),
                   topRight: Radius.circular(6),
                 ),
-                color: _barColor(i, on),
+                // Dikey degrade (alttan üstte)
+                gradient: LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  colors: [a, b],
+                ),
+                // fallback: color (gradient desteklemeyen sürüm olursa)
+                color: b,
               ),
             ],
           );

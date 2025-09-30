@@ -75,6 +75,33 @@
     }
   },
 
+  "reorder": "Sırala",
+  "done": "Bitti",
+
+  "todayProgress": "Bugün {done}/{total} tamamlandı",
+  "@todayProgress": {
+    "placeholders": {
+      "done": { "type": "int", "example": "3" },
+      "total": { "type": "int", "example": "5" }
+    }
+  },
+
+  "streakLabel": "Seri: {count} gün",
+  "@streakLabel": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "streakCurrent": "Güncel seri: {count} gün",
+  "streakBest": "En iyi seri: {count} gün",
+  "@streakCurrent": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "@streakBest": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+
   "toggleTodayOn": "Bugün ✓ İşaretle",
   "toggleTodayOff": "Bugün ✓ (Geri Al)",
   "update": "Güncelle",
@@ -143,8 +170,8 @@
       "merged": { "type": "int", "example": "3" }
     }
   },
-  
- "jsonActions": "JSON İşlemleri",
+
+  "jsonActions": "JSON İşlemleri",
   "@jsonActions": {
     "description": "Settings > Backup bölümünde bütün JSON aksiyonlarını açan sheet'in başlığı"
   },
@@ -153,9 +180,7 @@
     "description": "JSON sheet'i için kısa açıklama"
   },
 
-
-
-
+  "backupJsonTitle": "JSON Yedeği",
   "filterAll": "Tümü",
   "filterActive": "Aktif",
   "filterToday": "Bugün ✓",
@@ -164,8 +189,5 @@
   "deleteOne": "Sil",
 
   "more": "Daha fazla",
-"@more": { "description": "Overflow menu tooltip (⋯)" }
-
+  "@more": { "description": "Overflow menu tooltip (⋯)" }
 }
-
-

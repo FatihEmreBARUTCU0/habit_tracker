@@ -350,6 +350,42 @@ abstract class AppLocalizations {
   /// **'Success: {done}/7  (%{percent})'**
   String successLabel(int done, int percent);
 
+  /// No description provided for @reorder.
+  ///
+  /// In en, this message translates to:
+  /// **'Reorder'**
+  String get reorder;
+
+  /// No description provided for @done.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get done;
+
+  /// No description provided for @todayProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Today {done}/{total} completed'**
+  String todayProgress(int done, int total);
+
+  /// No description provided for @streakLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Current streak: {count} days'**
+  String streakLabel(int count);
+
+  /// No description provided for @streakCurrent.
+  ///
+  /// In en, this message translates to:
+  /// **'Current streak: {count} days'**
+  String streakCurrent(int count);
+
+  /// No description provided for @streakBest.
+  ///
+  /// In en, this message translates to:
+  /// **'Best streak: {count} days'**
+  String streakBest(int count);
+
   /// No description provided for @toggleTodayOn.
   ///
   /// In en, this message translates to:
@@ -589,6 +625,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Export / download / import / preview'**
   String get jsonActionsSub;
+
+  /// No description provided for @backupJsonTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup JSON'**
+  String get backupJsonTitle;
 
   /// No description provided for @filterAll.
   ///

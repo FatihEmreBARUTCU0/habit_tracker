@@ -50,13 +50,17 @@ class NeonButton extends StatelessWidget {
 
     final w = expanded ? SizedBox(width: double.infinity, child: btn) : btn;
 
-    return Opacity(
-      opacity: onPressed == null ? 0.6 : 1,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(radius),
-        onTap: onPressed,
-        child: w,
-      ),
-    );
+   return Opacity(
+  opacity: onPressed == null ? 0.6 : 1,
+  child: Material(
+    type: MaterialType.transparency,
+    child: InkWell(
+      borderRadius: BorderRadius.circular(radius),
+      onTap: onPressed,
+      child: w,
+    ),
+  ),
+);
+
   }
 }

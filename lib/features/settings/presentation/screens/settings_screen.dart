@@ -198,7 +198,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       showDialog(
                         context: context,
                         builder: (_) => AlertDialog(
-                          title: const Text('Backup JSON'),
+                          title: Text(t.backupJsonTitle),
                           content: SingleChildScrollView(
                             child: SelectableText(
                               json,

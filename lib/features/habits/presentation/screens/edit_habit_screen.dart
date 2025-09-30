@@ -25,7 +25,7 @@ class _EditHabitScreenState extends State<EditHabitScreen> {
     super.initState();
     _original = widget.initialName.trim();
     _controller = TextEditingController(text: widget.initialName);
-    _canSave = _isValidInitial(_controller.text);
+   
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
@@ -34,10 +34,7 @@ class _EditHabitScreenState extends State<EditHabitScreen> {
     });
   }
 
-  bool _isValidInitial(String? v) {
-    final t = (v ?? '').trim();
-    return t.isNotEmpty && t != _original;
-  }
+
 
   String? _validator(String? v) {
     final base = validateHabitName(context)(v);

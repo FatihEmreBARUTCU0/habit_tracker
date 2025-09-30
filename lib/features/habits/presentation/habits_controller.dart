@@ -67,5 +67,23 @@ Future<ImportResult> importHabits(List<Habit> incoming) async {
   return res;
 }
 
+Future<void> move(int oldIndex, int newIndex) async {
+  // Flutter onReorder: newIndex, oldIndex'ten sonra ise bir kaydırma gerekir
+  if (newIndex > oldIndex) newIndex -= 1;
+
+  // Sınır kontrolleri (güvenli alan)
+  if (oldIndex < 0 || oldIndex >= _items.length) return;
+  if (newIndex < 0 || newIndex >= _items.length) return;
+
+  // Değişiklik yoksa yazma/notify yapma
+  if (oldIndex == newIndex) return;
+
+  final item = _items.removeAt(oldIndex);
+  _items.insert(newIndex, item);
+
+  await repo.save(_items);
+  notifyListeners();
+}
+
 
 }

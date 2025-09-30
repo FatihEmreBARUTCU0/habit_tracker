@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // Haptic + HitTestBehavior vb.
 import 'package:provider/provider.dart';
+
 import 'package:habit_tracker/features/habits/domain/habit.dart';
 import 'package:habit_tracker/features/habits/presentation/screens/add_habit_screen.dart';
 import 'package:habit_tracker/features/habits/presentation/screens/edit_habit_screen.dart';
@@ -8,19 +10,14 @@ import 'package:habit_tracker/features/settings/presentation/screens/settings_sc
 import 'package:habit_tracker/l10n/generated/app_localizations.dart';
 import 'package:habit_tracker/features/habits/presentation/habits_controller.dart';
 import 'package:habit_tracker/core/backup/import_service.dart';
-import 'package:habit_tracker/ui/widgets/neon_fab.dart';
+
 import 'package:habit_tracker/ui/widgets/neon_app_bar.dart';
-// ✨
+import 'package:habit_tracker/ui/widgets/neon_fab.dart';
 import 'package:habit_tracker/ui/widgets/neon_scaffold.dart';
 import 'package:habit_tracker/ui/widgets/neon_habit_tile.dart';
 import 'package:habit_tracker/ui/theme/neon_theme.dart';
-
-// ✨ NeonButton & GlassCard
 import 'package:habit_tracker/ui/widgets/neon_button.dart';
 import 'package:habit_tracker/ui/widgets/glass_card.dart';
-
-// ✅ HAPTIC için ekle
-import 'package:flutter/services.dart';
 
 class HabitListScreen extends StatefulWidget {
   const HabitListScreen({super.key});
@@ -30,39 +27,76 @@ class HabitListScreen extends StatefulWidget {
 }
 
 class _HabitListScreenState extends State<HabitListScreen> {
+  // Seçim modu
   bool _selectionMode = false;
   final Set<String> _selected = <String>{};
 
-  // ✨ Filtre sekmesi: 0=Tümü, 1=Aktif (bugün işaretlenmemiş), 2=Bugün ✓
+  // Reorder & Scroll
+  bool _reorderMode = false;
+  final _scrollCtrl = ScrollController();
+
+  // Scroll-to-top mini FAB görünürlüğü
+  bool _showToTop = false;
+  late final VoidCallback _scrollListener;
+
+  // Filtre sekmesi: 0=Tümü, 1=Aktif (bugün işaretlenmemiş), 2=Bugün ✓
   int _tab = 0;
 
-  // ✨ Sadece ekranda filtre uygular; veriyi değiştirmez
+  @override
+  void initState() {
+    super.initState();
+    _scrollListener = () {
+      final show = _scrollCtrl.hasClients && _scrollCtrl.offset > 600;
+      if (show != _showToTop) {
+        setState(() => _showToTop = show);
+      }
+    };
+    _scrollCtrl.addListener(_scrollListener);
+  }
+
+  @override
+  void dispose() {
+    _scrollCtrl.removeListener(_scrollListener);
+    _scrollCtrl.dispose();
+    super.dispose();
+  }
+
+  // Tek noktadan "en üste kaydır"
+  void _scrollToTop() {
+    if (_scrollCtrl.hasClients) {
+      _scrollCtrl.animateTo(
+        0,
+        duration: const Duration(milliseconds: 350),
+        curve: Curves.easeOut,
+      );
+    }
+  }
+
+  // UI seviyesi filtre (veriyi değiştirmez)
   List<Habit> _applyFilter(List<Habit> items) {
     switch (_tab) {
       case 1:
-        // Aktif: bugün işaretlenmemişler
-        return items.where((h) => !h.isCheckedToday).toList();
+        return items.where((h) => !h.isCheckedToday).toList(); // Aktif
       case 2:
-        // Bugün ✓: bugün işaretliler
-        return items.where((h) => h.isCheckedToday).toList();
+        return items.where((h) => h.isCheckedToday).toList(); // Bugün ✓
       default:
-        return items;
+        return items; // Tümü
     }
   }
 
   Widget _dismissBg(BuildContext context, {required bool toLeft}) {
-    final n = context.neon; // NeonTheme
+    final n = context.neon;
     return Container(
-      decoration: BoxDecoration(gradient: n.gradPeachCoral), // 🔥 neon uyumlu
+      decoration: BoxDecoration(gradient: n.gradPeachCoral),
       alignment: toLeft ? Alignment.centerLeft : Alignment.centerRight,
       padding: const EdgeInsets.symmetric(horizontal: 18),
       child: const Icon(Icons.delete_outline, color: Colors.white, size: 28),
     );
   }
 
-  // ✅ HAPTIC: seçim moduna girerken hafif titreşim
+  // Seçim moduna hapticle gir
   void _enterSelection(Habit h) {
-    HapticFeedback.lightImpact(); // ✨
+    HapticFeedback.lightImpact();
     setState(() {
       _selectionMode = true;
       _selected.add(h.id);
@@ -110,16 +144,18 @@ class _HabitListScreenState extends State<HabitListScreen> {
           h.name.trim().toLowerCase() == newName.toLowerCase());
 
       if (exists) {
-        messenger.clearSnackBars();
-        messenger.showSnackBar(SnackBar(content: Text(l.duplicateName)));
+        messenger
+          ..clearSnackBars()
+          ..showSnackBar(SnackBar(content: Text(l.duplicateName)));
         return;
       }
 
       await c.renameHabit(habit, newName);
 
       if (!mounted) return;
-      messenger.clearSnackBars();
-      messenger.showSnackBar(SnackBar(content: Text(l.updated)));
+      messenger
+        ..clearSnackBars()
+        ..showSnackBar(SnackBar(content: Text(l.updated)));
     }
   }
 
@@ -149,7 +185,6 @@ class _HabitListScreenState extends State<HabitListScreen> {
     });
 
     await c.removeMany(removed.map((e) => e.value.id).toSet());
-
     if (!mounted) return;
 
     messenger
@@ -170,9 +205,9 @@ class _HabitListScreenState extends State<HabitListScreen> {
 
   void _onTileLongPress(Habit h) {
     if (_selectionMode) {
-      _toggleSelect(h); // seçim modundayken: seç/deseç
+      _toggleSelect(h);
     } else {
-      _enterSelection(h); // seçim modunda değilken: SEÇİM MODUNA GİR (haptic’li)
+      _enterSelection(h);
     }
   }
 
@@ -192,7 +227,6 @@ class _HabitListScreenState extends State<HabitListScreen> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Düzenle
               NeonButton(
                 text: l.edit,
                 onPressed: () async {
@@ -201,8 +235,6 @@ class _HabitListScreenState extends State<HabitListScreen> {
                 },
               ),
               const SizedBox(height: 8),
-
-              // Bugün ✓ / Geri Al
               NeonButton(
                 text: h.isCheckedToday ? l.todayUncheck : l.todayCheck,
                 onPressed: () async {
@@ -211,8 +243,6 @@ class _HabitListScreenState extends State<HabitListScreen> {
                 },
               ),
               const SizedBox(height: 8),
-
-              // Detay
               NeonButton(
                 text: l.detail,
                 onPressed: () async {
@@ -220,20 +250,17 @@ class _HabitListScreenState extends State<HabitListScreen> {
                   await Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (_) => HabitDetailScreen(habit: h)),
+                      builder: (_) => HabitDetailScreen(habit: h),
+                    ),
                   );
                 },
               ),
               const SizedBox(height: 8),
-
-              // Sil (tek öğe) + Geri Al
               OutlinedButton.icon(
                 icon: const Icon(Icons.delete_forever_rounded),
                 label: Text(l.deleteOne),
                 onPressed: () async {
                   Navigator.pop(context);
-
-                  // undo için index’i yakala
                   final idx = c.items.indexWhere((x) => x.id == h.id);
                   if (idx == -1) return;
 
@@ -265,18 +292,22 @@ class _HabitListScreenState extends State<HabitListScreen> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-
     final c = context.watch<HabitsController>();
     final habits = c.items;
     final hasItems = habits.isNotEmpty;
-    final n = context.neon;
-    // ✨ Filtre uygulanmış liste (UI seviyesinde)
+    
+
     final filtered = _applyFilter(habits);
 
     return NeonScaffold(
       appBar: NeonAppBar(
-        title: Text(
-            _selectionMode ? l.selectedCount(_selected.length) : l.habitListTitle),
+        title: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: _scrollToTop,
+          child: Text(
+            _selectionMode ? l.selectedCount(_selected.length) : l.habitListTitle,
+          ),
+        ),
         leading: _selectionMode
             ? IconButton(
                 tooltip: l.cancel,
@@ -291,7 +322,16 @@ class _HabitListScreenState extends State<HabitListScreen> {
               icon: const Icon(Icons.delete_outline, color: Colors.white),
               onPressed: () => _removeSelectedWithUndo(context),
             )
-          else
+          else ...[
+            if (_tab == 0)
+              IconButton(
+                tooltip: _reorderMode ? l.done : l.reorder,
+                icon: Icon(
+                  _reorderMode ? Icons.check : Icons.reorder,
+                  color: Colors.white,
+                ),
+                onPressed: () => setState(() => _reorderMode = !_reorderMode),
+              ),
             IconButton(
               tooltip: l.settings,
               icon: const Icon(Icons.settings, color: Colors.white),
@@ -302,31 +342,48 @@ class _HabitListScreenState extends State<HabitListScreen> {
                 );
               },
             ),
+          ],
         ],
       ),
 
-      // ✨ Header + Segmented + Liste
       body: Column(
         children: [
-          // ✨ Gradient başlık şeridi (metinsiz ince bant)
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
-            decoration: BoxDecoration(
-              gradient: n.gradPinkViolet, // ✅ sadece gradient
-            ),
-            child: const SafeArea(
-              bottom: false,
-              child: SizedBox(height: 8), // ince şerit
+          // Gradient başlık şeridi (tap -> en üste)
+          const SizedBox(height: 8),
+
+
+          // Günlük özet
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+            child: GlassCard(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      l.todayProgress(
+                        habits.where((h) => h.isCheckedToday).length,
+                        habits.length,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    habits.isEmpty
+                        ? '0%'
+                        : '${((habits.where((h) => h.isCheckedToday).length / habits.length) * 100).round()}%',
+                  ),
+                ],
+              ),
             ),
           ),
+          const SizedBox(height: 4),
 
-          // ✨ Segmented filter (GlassCard içinde)
+          // Segmented filter
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
             child: GlassCard(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                radius: context.neon.radius + 8,
+              radius: context.neon.radius + 8,
               child: SegmentedButton<int>(
                 showSelectedIcon: false,
                 segments: [
@@ -336,99 +393,153 @@ class _HabitListScreenState extends State<HabitListScreen> {
                 ],
                 selected: {_tab},
                 onSelectionChanged: (s) => setState(() => _tab = s.first),
-                
               ),
             ),
           ),
           const SizedBox(height: 4),
 
-          // ✨ Liste (filtre uygulanmış) veya boş durum
+          // Liste (reorder "Tümü"nde aktif)
           Expanded(
             child: hasItems
-                ? ListView.separated(
-                    itemCount: filtered.length,
-                    separatorBuilder: (_, __) => const Divider(height: 1),
-                    itemBuilder: (context, index) {
-                      final habit = filtered[index];
-                      final isSelected = _selected.contains(habit.id);
-
-                      final tile = NeonHabitTile(
-                        habit: habit,
-                        checkedToday: habit.isCheckedToday,
-                        // ✅ HAPTIC: ✓ tıklandığında hafif seçim hissi
-                        onToggleToday: () {
-                          HapticFeedback.selectionClick(); // ✨
-                          c.toggleToday(habit);
+                ? (_reorderMode && _tab == 0
+                    ? ReorderableListView.builder(
+                        scrollController: _scrollCtrl,
+                        padding: const EdgeInsets.only(bottom: 96),
+                        itemCount: habits.length,
+                        onReorder: (oldIndex, newIndex) async {
+                          await context.read<HabitsController>().move(oldIndex, newIndex);
+                          HapticFeedback.selectionClick();
                         },
-                        onEdit: () => _goToEdit(context, habit),
-                        onDetail: () async {
-                          await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) =>
-                                  HabitDetailScreen(habit: habit),
+                        itemBuilder: (context, index) {
+                          final habit = habits[index];
+                          return KeyedSubtree(
+                            key: ValueKey(habit.id),
+                            child: NeonHabitTile(
+                              habit: habit,
+                              checkedToday: habit.isCheckedToday,
+                              onToggleToday: () {}, // pasif
+                              onEdit: () {},
+                              onDetail: () {},
+                              selectionMode: false,
+                              onMore: null,
                             ),
                           );
-                          if (!mounted) return;
                         },
-                        selectionMode: _selectionMode,
-                        selected: isSelected,
-                        onTapSelect: () => _toggleSelect(habit),
-                        onLongPress: () => _onTileLongPress(habit),
-                        onMore:
-                            _selectionMode ? null : () => _showTileActions(habit),
-                      );
+                      )
+                    : ListView.separated(
+                        controller: _scrollCtrl,
+                        itemCount: filtered.length,
+                        separatorBuilder: (_, __) => const Divider(height: 1),
+                        itemBuilder: (context, index) {
+                          final habit = filtered[index];
+                          final isSelected = _selected.contains(habit.id);
 
-                      if (_selectionMode) return tile;
+                          final tile = NeonHabitTile(
+                            habit: habit,
+                            checkedToday: habit.isCheckedToday,
+                            onToggleToday: () {
+                              HapticFeedback.selectionClick();
+                              c.toggleToday(habit);
+                            },
+                            onEdit: () => _goToEdit(context, habit),
+                            onDetail: () async {
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => HabitDetailScreen(habit: habit),
+                                ),
+                              );
+                              if (!mounted) return;
+                            },
+                            selectionMode: _selectionMode,
+                            selected: isSelected,
+                            onTapSelect: () => _toggleSelect(habit),
+                            onLongPress: () => _onTileLongPress(habit),
+                            onMore: _selectionMode ? null : () => _showTileActions(habit),
+                          );
 
-                      return Dismissible(
-                        key: ValueKey(habit.id),
-                        direction: DismissDirection.horizontal,
-                        background: _dismissBg(context, toLeft: true),
-                        secondaryBackground: _dismissBg(context, toLeft: false),
-                        onDismissed: (_) => c.removeMany({habit.id}),
-                        child: tile,
-                      );
-                    },
-                  )
+                          if (_selectionMode) return tile;
+
+                          return Dismissible(
+                            key: ValueKey(habit.id),
+                            direction: DismissDirection.horizontal,
+                            background: _dismissBg(context, toLeft: true),
+                            secondaryBackground: _dismissBg(context, toLeft: false),
+                            onDismissed: (_) async {
+                              final messenger = ScaffoldMessenger.of(context);
+                              final idx = c.items.indexWhere((x) => x.id == habit.id);
+                              if (idx == -1) return;
+
+                              await c.removeMany({habit.id});
+
+                              if (!mounted) return;
+                              messenger
+                                ..clearSnackBars()
+                                ..showSnackBar(
+                                  SnackBar(
+                                    content: Text(l.itemDeleted(habit.name)),
+                                    action: SnackBarAction(
+                                      label: l.undo,
+                                      onPressed: () {
+                                        c.insertMany([MapEntry(idx, habit)]);
+                                      },
+                                    ),
+                                    duration: const Duration(seconds: 3),
+                                  ),
+                                );
+                            },
+                            child: tile,
+                          );
+                        },
+                      ))
                 : const _EmptyState(),
           ),
         ],
       ),
 
-      // 7) FAB metni kısa ve sabit: l.add (zaten böyleydi)
-      floating: _selectionMode
+      // Floating: selection/reorder yoksa Stack -> mini Yukarı + Add FAB
+      floating: (_selectionMode || _reorderMode)
           ? null
-          : NeonFab.extended(
-              icon: const Icon(Icons.add, color: Colors.white),
-              label: l.add, // kısa ve sabit
-              onPressed: () async {
-                final l = AppLocalizations.of(context);
-                final c = context.read<HabitsController>();
-                final messenger = ScaffoldMessenger.of(context);
+          : Stack(
+              alignment: Alignment.bottomRight,
+              children: [
+                if (_showToTop)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 80, right: 16),
+                    child: NeonFab.icon(
+                      onPressed: _scrollToTop,
+                      icon: const Icon(Icons.keyboard_arrow_up, color: Colors.white),
+                    ),
+                  ),
+                NeonFab.extended(
+                  icon: const Icon(Icons.add, color: Colors.white),
+                  label: l.add,
+                  onPressed: () async {
+                    final c = context.read<HabitsController>();
+                    final messenger = ScaffoldMessenger.of(context);
 
-                final result = await Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const AddHabitScreen()),
-                );
-                if (!mounted) return;
+                    final result = await Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const AddHabitScreen()),
+                    );
+                    if (!mounted) return;
 
-                if (result is String && result.trim().isNotEmpty) {
-                  final newName = result.trim();
-                  final exists = c.items.any(
-                    (h) =>
-                        h.name.trim().toLowerCase() ==
-                        newName.toLowerCase(),
-                  );
-                  if (exists) {
-                    messenger.clearSnackBars();
-                    messenger.showSnackBar(
-                        SnackBar(content: Text(l.duplicateName)));
-                    return;
-                  }
-                  await c.addHabit(newName);
-                }
-              },
+                    if (result is String && result.trim().isNotEmpty) {
+                      final newName = result.trim();
+                      final exists = c.items.any(
+                        (h) => h.name.trim().toLowerCase() == newName.toLowerCase(),
+                      );
+                      if (exists) {
+                        messenger
+                          ..clearSnackBars()
+                          ..showSnackBar(SnackBar(content: Text(l.duplicateName)));
+                        return;
+                      }
+                      await c.addHabit(newName);
+                    }
+                  },
+                ),
+              ],
             ),
     );
   }
@@ -449,7 +560,6 @@ class _EmptyState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // ✨ Cam efektli büyük ikon + metin
             GlassCard(
               padding: const EdgeInsets.all(24),
               child: Column(
@@ -462,8 +572,6 @@ class _EmptyState extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-
-            // ✨ NeonButton ile birincil CTA
             NeonButton(
               text: l.addHabit,
               onPressed: () async {
@@ -474,15 +582,12 @@ class _EmptyState extends StatelessWidget {
                 if (result is String && result.trim().isNotEmpty) {
                   final name = result.trim();
                   final exists = c.items.any(
-                    (h) =>
-                        h.name.trim().toLowerCase() ==
-                        name.toLowerCase(),
+                    (h) => h.name.trim().toLowerCase() == name.toLowerCase(),
                   );
                   if (exists) {
                     messenger
                       ..clearSnackBars()
-                      ..showSnackBar(
-                          SnackBar(content: Text(l.duplicateName)));
+                      ..showSnackBar(SnackBar(content: Text(l.duplicateName)));
                     return;
                   }
                   await c.addHabit(name);
@@ -490,8 +595,6 @@ class _EmptyState extends StatelessWidget {
               },
             ),
             const SizedBox(height: 10),
-
-            // 📥 JSON’dan İçe Aktar
             SizedBox(
               width: double.infinity,
               child: OutlinedButton.icon(
@@ -504,8 +607,7 @@ class _EmptyState extends StatelessWidget {
                     if (incoming.isEmpty) {
                       messenger
                         ..clearSnackBars()
-                        ..showSnackBar(
-                            SnackBar(content: Text(l.importNothing)));
+                        ..showSnackBar(SnackBar(content: Text(l.importNothing)));
                       return;
                     }
 
@@ -525,8 +627,7 @@ class _EmptyState extends StatelessWidget {
                   } catch (_) {
                     messenger
                       ..clearSnackBars()
-                      ..showSnackBar(
-                          SnackBar(content: Text(l.invalidBackupFile)));
+                      ..showSnackBar(SnackBar(content: Text(l.invalidBackupFile)));
                   }
                 },
               ),
