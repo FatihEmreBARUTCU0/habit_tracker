@@ -170,6 +170,8 @@ class NeonHabitTile extends StatelessWidget {
           margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           padding: const EdgeInsets.all(12),
           radius: 22,
+           glow: false,
+            blurSigma: 8,
           child: InkWell(
             borderRadius: BorderRadius.circular(22),
             onTap: selectionMode ? onTapSelect : null,

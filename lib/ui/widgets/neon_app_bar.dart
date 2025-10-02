@@ -47,6 +47,8 @@ class NeonAppBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0,
       centerTitle: true,
       automaticallyImplyLeading: false,
+      iconTheme: const IconThemeData(color: Colors.white),
+      actionsIconTheme: const IconThemeData(color: Colors.white),
       leading: leading,
       actions: actions,
       title: DefaultTextStyle.merge(
@@ -101,7 +103,9 @@ class NeonAppBar extends StatelessWidget implements PreferredSizeWidget {
           ],
         ),
       ),
-      systemOverlayStyle: SystemUiOverlayStyle.light,
+            systemOverlayStyle: isDark
+          ? SystemUiOverlayStyle.light
+          : SystemUiOverlayStyle.dark,
     );
   }
 }

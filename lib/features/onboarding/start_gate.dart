@@ -7,7 +7,7 @@ class StartGate extends StatelessWidget {
   final Widget onboarding;
   const StartGate({super.key, required this.home, required this.onboarding});
 
-  Future<bool> _seen(BuildContext context) async {
+  Future<bool> _seen(_) async {
     
     final prefs = await SharedPreferences.getInstance();
     return prefs.getBool(kOnboardingSeenKey) == true;

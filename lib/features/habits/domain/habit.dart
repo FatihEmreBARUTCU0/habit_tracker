@@ -25,13 +25,15 @@ class Habit {
   // bugünün işaret durumu
  bool get isCheckedToday => history[dtu.todayYmd()] == true;
 
-  void toggleToday() {
-     final t = dtu.todayYmd();
-    if (history[t] == true) {
-      history.remove(t);
+    Habit toggleTodayImmutable() {
+    final t = dtu.todayYmd();
+    final next = Map<String, bool>.from(history);
+    if (next[t] == true) {
+      next.remove(t);
     } else {
-      history[t] = true;
+      next[t] = true;
     }
+    return copyWith(history: next);
   }
 
   Map<String, dynamic> toMap() {

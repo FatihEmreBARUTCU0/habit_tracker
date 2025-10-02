@@ -26,12 +26,13 @@ class FrameStats {
       return;
     }
     double ms(Duration d) => d.inMicroseconds / 1000.0;
-  double p(List<double> xs, double q) {
-  if (xs.isEmpty) return 0;
-  final sorted = [...xs]..sort(); // yeni kopya oluştur, sırala
-  final i = max(0, (sorted.length * q).floor() - 1);
-  return sorted[i];
-}
+  
+   
+    double p(List<double> xs, double q) {
+    if (xs.isEmpty) return 0;
+    final i = max(0, (xs.length * q).floor() - 1);
+    return xs[i];
+  }
 
 
     final uiMs = _ui.map(ms).toList()..sort();

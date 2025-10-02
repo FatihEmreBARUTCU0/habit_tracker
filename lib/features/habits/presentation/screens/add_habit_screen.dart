@@ -49,7 +49,7 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
 
     return NeonScaffold(
       appBar: NeonAppBar(title: Text(l.addHabitTitle),
-       leading: const BackButton(color: Colors.white)
+       leading: const BackButton()
        ),
       body: Padding(
         padding: const EdgeInsets.all(16),

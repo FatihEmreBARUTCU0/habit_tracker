@@ -121,9 +121,6 @@ class AppLocalizationsTr extends AppLocalizations {
   String get newNameHint => 'Örn: Sabah su içmek';
 
   @override
-  String get updateButton => 'Güncelle';
-
-  @override
   String get updated => 'Güncellendi.';
 
   @override

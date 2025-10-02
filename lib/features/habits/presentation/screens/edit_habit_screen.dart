@@ -71,7 +71,7 @@ class _EditHabitScreenState extends State<EditHabitScreen> {
     return NeonScaffold(
       appBar: NeonAppBar(
         title: Text(l.editHabitTitle),
-        leading: const BackButton(color: Colors.white),
+        leading: const BackButton(),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),

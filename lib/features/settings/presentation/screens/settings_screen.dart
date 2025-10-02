@@ -254,7 +254,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return NeonScaffold(
       appBar: NeonAppBar(
         title: Text(t.settingsTitle),
-        leading: const BackButton(color: Colors.white),
+        leading: const BackButton(),
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),

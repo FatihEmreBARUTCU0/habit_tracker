@@ -120,9 +120,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get newNameHint => 'e.g., Morning water';
 
   @override
-  String get updateButton => 'Update';
-
-  @override
   String get updated => 'Updated';
 
   @override

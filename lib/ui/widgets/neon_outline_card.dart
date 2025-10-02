@@ -8,10 +8,10 @@ class NeonOutlineCard extends StatelessWidget {
   final double radius;
   final EdgeInsetsGeometry margin;
 
-  /// Opsiyonel: Yeşile kaçmadan çok hafif “cool” bir dokunuş (sky-lilac).
-  /// false (varsayılan): blush → lilac → pink (önerilen, on-brand)
-  /// true : sky-lilac → lilac → pink (hafif serin ama yeşilsiz)
+
   final bool coolHint;
+  final bool glow;  
+  final double? blurSigma;
 
   const NeonOutlineCard({
     super.key,
@@ -20,11 +20,20 @@ class NeonOutlineCard extends StatelessWidget {
     this.radius = 20,
     this.margin = const EdgeInsets.all(0),
     this.coolHint = false,
+    this.glow = true,
+    this.blurSigma,
   });
 
   @override
   Widget build(BuildContext context) {
     final n = context.neon;
+
+    // Tema: Light/Dark ayrımı
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    // Light için sıcak şeftali ışıma (%12 alfa), Dark için tema glowy (plum)
+    final lightShadow = const Color(0xFFFFA8C2).withValues(alpha: 0.12);
+    final darkShadow  = n.glow;
 
     // Önerilen palet: blush → lilac → pink
     const softTrio = <Color>[
@@ -46,15 +55,18 @@ class NeonOutlineCard extends StatelessWidget {
       margin: margin,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(radius + 2),
-        // Neon yumuşak ışıma (theme token'ından)
-        boxShadow: [
-          BoxShadow(
-            color: n.glow,
-            blurRadius: 28,
-            spreadRadius: 0.5,
-            offset: const Offset(0, 10),
-          ),
-        ],
+        // Neon yumuşak ışıma — tema bazlı
+        boxShadow: glow
+            ? [
+                BoxShadow(
+                  color: isDark ? darkShadow : lightShadow,
+                  blurRadius: isDark ? 28 : 18,
+                  spreadRadius: isDark ? 0.5 : 0.2,
+                  offset: isDark ? const Offset(0, 10) : const Offset(0, 8),
+                ),
+              ]
+            : const [],
+        
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -67,7 +79,9 @@ class NeonOutlineCard extends StatelessWidget {
       child: GlassCard(
         padding: padding,
         radius: radius,
+        blurSigma: blurSigma,
         child: child,
+
       ),
     );
   }

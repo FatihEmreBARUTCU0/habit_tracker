@@ -1,3 +1,4 @@
+// lib/features/habits/presentation/screens/habit_detail_screen.dart
 import 'package:flutter/material.dart';
 import '../../domain/habit.dart';
 import 'package:habit_tracker/l10n/generated/app_localizations.dart';
@@ -33,6 +34,15 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // 👇 Güncel habit'i store'dan izle (toggle sonrası anında rebuild)
+    final habit = context
+        .watch<HabitsController>()
+        .items
+        .firstWhere(
+          (h) => h.id == widget.habit.id,
+          orElse: () => widget.habit,
+        );
+
     final l = AppLocalizations.of(context);
 
     // Günün başını baz al (00:00)
@@ -45,7 +55,7 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
 
     // History: 'YYYY-MM-DD' key'leri ile kontrol
     final checks = last7Dates
-        .map((d) => widget.habit.history[dtu.ymdFormat(d)] == true)
+        .map((d) => habit.history[dtu.ymdFormat(d)] == true)
         .toList();
 
     // Grafikte gösterilecek kısaltmalar
@@ -57,13 +67,13 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
     final percentInt = (percent * 100).round();
 
     // 🔢 Seriler
-    final currentNearest = dtu.currentStreakNearest(widget.habit.history);
-    final bestEver = dtu.bestStreak(widget.habit.history);
+    final currentNearest = dtu.currentStreakNearest(habit.history);
+    final bestEver = dtu.bestStreak(habit.history);
 
     return NeonScaffold(
       appBar: NeonAppBar(
-        title: Text(l.detailTitleFor(widget.habit.name)),
-        leading: const BackButton(color: Colors.white),
+        title: Text(l.detailTitleFor(habit.name)),
+        leading: const BackButton(),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -86,7 +96,7 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
                   const SizedBox(height: 8),
                   Text(l.successLabel(doneCount, percentInt)),
                   const SizedBox(height: 4),
-                  // 🔥 Yeni: iki farklı seri bilgisi
+                  // 🔥 İki farklı seri bilgisi
                   Text(l.streakCurrent(currentNearest)),
                   const SizedBox(height: 2),
                   Text(l.streakBest(bestEver)),
@@ -97,16 +107,15 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
             GlassCard(
               padding: const EdgeInsets.all(12),
               child: NeonButton(
-                text: widget.habit.isCheckedToday ? l.toggleTodayOff : l.toggleTodayOn,
+                text: habit.isCheckedToday ? l.toggleTodayOff : l.toggleTodayOn,
                 onPressed: () async {
                   final c = context.read<HabitsController>();
-                  await c.toggleToday(widget.habit);
+                  await c.toggleToday(habit);
 
                   // Üst katmana "persist" sinyali gönder (opsiyonel)
                   widget.onPersist?.call();
 
-                  if (!mounted) return;
-                  setState(() {});
+                  // setState gerek yok; watch() tetikleyecek
                 },
               ),
             ),

@@ -37,7 +37,7 @@ class HabitsController extends ChangeNotifier {
   Future<void> toggleToday(Habit h) async {
     final i = _items.indexWhere((x) => x.id == h.id);
     if (i == -1) return;
-    _items[i].toggleToday();
+    _items[i] = _items[i].toggleTodayImmutable();
     await repo.save(_items);
     notifyListeners();
   }

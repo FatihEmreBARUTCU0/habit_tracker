@@ -326,15 +326,12 @@ class _HabitListScreenState extends State<HabitListScreen> {
             if (_tab == 0)
               IconButton(
                 tooltip: _reorderMode ? l.done : l.reorder,
-                icon: Icon(
-                  _reorderMode ? Icons.check : Icons.reorder,
-                  color: Colors.white,
-                ),
+                icon: Icon(_reorderMode ? Icons.check : Icons.reorder),
                 onPressed: () => setState(() => _reorderMode = !_reorderMode),
               ),
             IconButton(
               tooltip: l.settings,
-              icon: const Icon(Icons.settings, color: Colors.white),
+              icon: const Icon(Icons.settings),
               onPressed: () {
                 Navigator.push(
                   context,

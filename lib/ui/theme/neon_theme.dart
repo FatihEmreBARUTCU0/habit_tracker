@@ -97,9 +97,9 @@ class NeonTheme extends ThemeExtension<NeonTheme> {
   // LIGHT — sweeter rosy-peach (clearly noticeable)
   static const NeonTheme light = NeonTheme(
     // sweeter base (noticeably rosy)
-    baseBg: Color(0xFFFFE8F2), // was lighter/whiter
+    baseBg: Color(0xFFFFE8F2),
 
-    // keep your improved header gradient (multi-stop)
+    // improved header gradient (multi-stop)
     gradPinkViolet: LinearGradient(
       begin: Alignment(-1.05, -0.90),
       end: Alignment(1.05, 0.90),
@@ -124,10 +124,12 @@ class NeonTheme extends ThemeExtension<NeonTheme> {
     ),
 
     glassBlur: 14,
-    glassOverlay: 0.12,               // okunabilirlik için hafif artırılmış
-    glassStroke: Color(0x14000000),
+
+    // ✅ Daha temiz opsiyon uygulandı
+    glassOverlay: 0.08,               // önce 0.10 → biraz daha az puslu
+    glassStroke: Color(0x0D000000),   // önerilen ince iç çizgi (siyah %5)
     radius: 22,
-    glow: Color(0x334B3AA3),
+    glow: Color(0x14FFA8C2),          // sıcak, hafif şeftali glow (%8 alfa)
 
     surfaceGlass: Color(0x4DFFFFFF),  // beyaz %30
     surfaceBorder: Color(0x0D000000), // siyah %5

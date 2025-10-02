@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'dart:async';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -74,7 +74,7 @@ Future<void> main() async {
   );
 
   if (!kReleaseMode) {
-    await showTestNotificationIn5s();
+     unawaited(showTestNotificationIn5s());
   }
 
   // Settings
@@ -84,11 +84,11 @@ Future<void> main() async {
   final prefs = await SharedPreferences.getInstance();
   final repo = HabitsRepository(prefs);
 
-  if (!kReleaseMode) {
-    // FrameStats.I.start();
-    Future.delayed(const Duration(seconds: 15), () {
+ if (!kReleaseMode) {
+    FrameStats.I.start();
+    unawaited(Future.delayed(const Duration(seconds: 15), () {
       FrameStats.I.stopAndPrint(label: 'Home idle+scroll');
-    });
+    }));
   }
 
   runApp(

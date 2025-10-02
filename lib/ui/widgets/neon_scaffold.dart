@@ -68,22 +68,30 @@ class NeonScaffold extends StatelessWidget {
       decoration: BoxDecoration(color: n.baseBg),
       child: Stack(
         children: [
-          Positioned.fill(child: background),
+          // Statik gradient layer'ını cache'le
+          Positioned.fill(child: RepaintBoundary(child: background)),
 
           // A) mod’a göre iki farklı pastel alan
           if (isDark)
             Positioned.fill(
-              child: _PastelFieldDark(
-                warmer: darkWarmer,
-                cooler: darkCooler,
-                moreVisible: darkMoreVisible,
-                flatter: darkFlatter,
+              child: RepaintBoundary(
+                child: _PastelFieldDark(
+                  warmer: darkWarmer,
+                  cooler: darkCooler,
+                  moreVisible: darkMoreVisible,
+                  flatter: darkFlatter,
+                ),
               ),
             )
           else
-            const Positioned.fill(child: _PastelField()),
+            const Positioned.fill(
+              child: RepaintBoundary(child: _PastelField()),
+            ),
 
-          if (withVignette) const Positioned.fill(child: vignette),
+          if (withVignette)
+            const Positioned.fill(
+              child: RepaintBoundary(child: vignette),
+            ),
 
           // Şeffaf Scaffold → arka plandaki token gradyanı görünür kalır
           Scaffold(
@@ -168,7 +176,7 @@ class _PastelFieldDark extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // D) Hızlı ayarlar uygulanıyor
+    
     // Renkler
     final Color fuchsiaBase = warmer ? const Color(0xFFFF8BF0) : const Color(0xFFEA8CFF);
     final Color lilacBase   = cooler ? const Color(0xFF7C65FF) : const Color(0xFF6E4BFF);
@@ -212,7 +220,7 @@ class _PastelFieldDark extends StatelessWidget {
                   endAngle:   3.60,
                   colors: [
                     Colors.transparent,
-                    lilacBase.withValues(alpha: lilacAlpha), // leylak
+                    lilacBase.withValues(alpha: lilacAlpha), 
                     Colors.transparent,
                   ],
                   stops: const [0.00, 0.40, 1.00],
@@ -221,7 +229,7 @@ class _PastelFieldDark extends StatelessWidget {
             ),
           ),
 
-          // Çok hafif dikey kararma: tabanda derinlik
+         
           Positioned.fill(
             child: DecoratedBox(
               decoration: BoxDecoration(

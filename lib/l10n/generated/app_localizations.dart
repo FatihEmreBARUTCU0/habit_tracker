@@ -308,12 +308,6 @@ abstract class AppLocalizations {
   /// **'e.g., Morning water'**
   String get newNameHint;
 
-  /// No description provided for @updateButton.
-  ///
-  /// In en, this message translates to:
-  /// **'Update'**
-  String get updateButton;
-
   /// No description provided for @updated.
   ///
   /// In en, this message translates to:
