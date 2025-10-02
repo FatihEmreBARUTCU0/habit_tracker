@@ -36,7 +36,6 @@
 ---
 
 ## 🖼️ Ekran Görüntüleri
-> Görsellerinizi `docs/` klasörüne koyup yolları güncelleyebilirsiniz.
 - ![Home (Light)](docs/01_home_light.png)  
 - ![Home (Dark)](docs/02_home_dark.png)  
 - ![Detail + Chart](docs/03_detail_chart.png)  
@@ -58,9 +57,7 @@
 flutter --version
 flutter doctor
 
-# Repoyu klonla
-git clone https://github.com/<kullanici>/<repo>.git
-cd <repo>
+
 
 # Bağımlılıkları indir
 flutter pub get
