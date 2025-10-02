@@ -6,17 +6,17 @@
 </p>
 
 <p align="center">
-  <a href="#-özellikler">Özellikler</a> •
-  <a href="#-ekran-görüntüleri">Ekran Görüntüleri</a> •
-  <a href="#-kurulum">Kurulum</a> •
-  <a href="#-çalıştırma">Çalıştırma</a> •
-  <a href="#-kullanım">Kullanım</a> •
-  <a href="#-yedekleme-şeması-json">JSON Şema</a> •
-  <a href="#-proje-yapısı">Yapı</a> •
-  <a href="#-yerelleştirme-l10n">l10n</a> •
-  <a href="#-build--dağıtım">Build</a> •
-  <a href="#-sss">SSS</a> •
-  <a href="#-lisans">Lisans</a>
+  <a href="#özellikler">Özellikler</a> •
+  <a href="#ekran-görüntüleri">Ekran Görüntüleri</a> •
+  <a href="#kurulum">Kurulum</a> •
+  <a href="#çalıştırma">Çalıştırma</a> •
+  <a href="#kullanım">Kullanım</a> •
+  <a href="#yedekleme-şeması-json">JSON Şema</a> •
+  <a href="#proje-yapısı">Yapı</a> •
+  <a href="#yerelleştirme-l10n">l10n</a> •
+  <a href="#build--dağıtım">Build</a> •
+  <a href="#sss">SSS</a> •
+  <a href="#lisans">Lisans</a>
 </p>
 
 ---
@@ -24,7 +24,7 @@
 ## ✨ Özellikler
 - ✅ **Alışkanlık Ekle/Düzenle/Sil** (boş/duplike korumalı)  
 - ✅ **Günlük ✓**: Bugün için hızlı işaretleme, günlük ilerleme kartı (X/Y ve %)  
-- ✅ **7-Gün Grafiği** (FL Chart) + **Streak**: `currentStreakNearest`, `bestStreak`  
+- ✅ **7-Gün Grafiği** (`fl_chart`) + **Streak**: `currentStreakNearest`, `bestStreak`  
 - ✅ **Sürükle-Bırak Sıralama** (yalnızca *All* sekmesinde)  
 - ✅ **Filtreler**: All / Active / Today ✓  
 - ✅ **JSON Yedekleme & Geri Yükleme** (Paylaş, Kaydet, Önizle, Kopyala)  
@@ -57,8 +57,6 @@
 flutter --version
 flutter doctor
 
-
-
 # Bağımlılıkları indir
 flutter pub get
 ▶️ Çalıştırma
@@ -67,39 +65,39 @@ Kodu kopyala
 # Cihaz/Emülatör listesi
 flutter devices
 
-# Debug çalıştır
+# Debug çalıştır (varsayılan cihaz)
 flutter run
 
 # Sadece Android
 flutter run -d android
-📌 İlk açılışta Android bildirim izni istenir. (Debug’da 5 sn sonra test bildirimi gelir.)
+📌 İlk açılışta Android bildirim izni istenir. (Debug’da ~5 sn sonra test bildirimi gelir.)
 
 🛠️ Kullanım
-Onboarding → “Skip” veya sayfaları kaydır → ana liste
+Onboarding: “Skip” veya sayfaları kaydır → ana liste
 
-Ekle → sağ alt + → isim gir → Save
+Ekle: sağ alt + → isim gir → Save
 
-Düzenle / Sil / Detay → karttaki ⋯ menüsü
+Düzenle / Sil / Detay: karttaki ⋯ menüsü
 
-Bugün ✓ → kartın sağındaki ikonla işaretle / geri al
+Bugün ✓: kartın sağındaki ikonla işaretle / geri al
 
-Filtre → All / Active / Today ✓
+Filtre: All / Active / Today ✓
 
-Sıralama → AppBar’daki Reorder yalnızca All sekmesinde
+Sıralama: AppBar’daki Reorder (sadece All sekmesinde)
 
-Detay → Son 7 gün grafiği + Current/Best streak
+Detay: Son 7 gün grafiği + Current/Best streak
 
-Ayarlar → Theme (Light/Dark/System), Language (TR/EN)
+Ayarlar: Tema (Light/Dark/System), Dil (TR/EN)
 
 JSON Actions:
 
-Share JSON backup → sistem paylaşım sayfası
+Share backup: Sistem paylaşım sayfasını açar
 
-Download JSON backup → konum seç kaydet · Open/Share
+Download backup: Konum seç → kaydet (Open/Share kullanılabilir)
 
-Import JSON backup → dosya seç · id/isim ile merge
+Import backup: Dosya seç → id veya name eşleşmesiyle merge
 
-Preview / Copy → JSON metnini gör/kopyala
+Preview / Copy: JSON metnini gösterir / kopyalar
 
 💾 Yedekleme Şeması (JSON)
 json
@@ -112,17 +110,17 @@ Kodu kopyala
     {
       "id": "string",
       "name": "string",
-      "lastCheckedYmd": "YYYY-MM-DD | ''",
+      "lastCheckedYmd": "YYYY-MM-DD or ''",
       "history": { "YYYY-MM-DD": true }
     }
   ]
 }
 🔄 Merge Kuralları
-id eşleşirse → history union (birinde true ise true)
+id eşleşirse → history union (birinde true ise sonuç true)
 
-isim (case-insensitive) eşleşirse → yine union
+name eşleşirse (case-insensitive) → yine union
 
-Hiçbiri değilse → yeni kayıt
+Hiçbiri değilse → yeni kayıt eklenir
 
 📂 Proje Yapısı
 bash
@@ -156,11 +154,13 @@ Kodu kopyala
 AppLocalizations.of(context).<key>
 📦 Build & Dağıtım
 Android APK
+
 bash
 Kodu kopyala
 flutter build apk --release
 # Çıktı: build/app/outputs/apk/release/app-release.apk
 GitHub Release
+
 GitHub → Releases → Draft a new release
 
 Tag (örn. v1.0.0) → notları yaz
