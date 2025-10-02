@@ -1,6 +1,5 @@
 {
   "habitListTitle": "Alışkanlıklarım",
-
   "cancel": "İptal",
   "settings": "Ayarlar",
 
@@ -13,13 +12,11 @@
   },
 
   "deleteSelected": "Seçilenleri Sil",
-
   "todayCheck": "Bugün ✓",
   "todayUncheck": "Bugün işareti kaldır",
 
   "edit": "Düzenle",
   "detail": "Detay",
-
   "noSelection": "Seçili öğe yok",
 
   "itemsDeleted": "{count} öğe silindi",
@@ -30,7 +27,6 @@
   },
 
   "undo": "Geri Al",
-
   "itemDeleted": "\"{name}\" silindi",
   "@itemDeleted": {
     "placeholders": {
@@ -40,7 +36,6 @@
 
   "addHabit": "Alışkanlık Ekle",
   "add": "Ekle",
-
   "noHabitsHint": "Henüz alışkanlık yok.\nSağ alttaki + ile ekleyebilirsin.",
 
   "settingsTitle": "Ayarlar",
@@ -58,7 +53,6 @@
   "editHabitTitle": "Alışkanlık Düzenle",
   "newName": "Yeni ad",
   "newNameHint": "Örn: Sabah su içmek",
-  "updateButton": "Güncelle",
   "updated": "Güncellendi.",
 
   "noChange": "Bir değişiklik yapmadın.",
@@ -80,9 +74,119 @@
     }
   },
 
+  "reorder": "Sırala",
+  "done": "Bitti",
+
+  "todayProgress": "Bugün {done}/{total} tamamlandı",
+  "@todayProgress": {
+    "placeholders": {
+      "done": { "type": "int", "example": "3" },
+      "total": { "type": "int", "example": "5" }
+    }
+  },
+
+  "streakLabel": "Seri: {count} gün",
+  "@streakLabel": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "streakCurrent": "Güncel seri: {count} gün",
+  "streakBest": "En iyi seri: {count} gün",
+  "@streakCurrent": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "@streakBest": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+
   "toggleTodayOn": "Bugün ✓ İşaretle",
   "toggleTodayOff": "Bugün ✓ (Geri Al)",
   "update": "Güncelle",
-"duplicateName": "Bu alışkanlık adı zaten var."
+  "duplicateName": "Bu alışkanlık adı zaten var.",
 
+  "backup": "Yedekleme",
+  "exportJsonFile": "JSON yedeğini paylaş",
+  "exportJsonFileSub": "Sistem paylaşım menüsü ile .json dosyası",
+  "sharedViaSystemSheet": "Paylaşım menüsü açıldı",
+  "exportFailed": "Dışa aktarma başarısız",
+  "nothingToExport": "Dışa aktarılacak kayıt yok",
+
+  "importJsonFile": "JSON yedeğini içe aktar",
+  "importJsonFileSub": "Dosyadan .json yükle ve birleştir",
+  "importSuccess": "{count} kayıt içe aktarıldı",
+  "@importSuccess": {
+    "placeholders": {
+      "count": { "type": "int", "example": "3" }
+    }
+  },
+  "importNothing": "İçe aktarılacak yeni kayıt yok",
+  "importFailed": "İçe aktarma başarısız",
+  "invalidBackupFile": "Geçersiz yedek dosyası",
+
+  "onbTitle1": "Alışkanlıklarını takip et",
+  "onbDesc1": "Günlük rutinler oluştur ve ✓ işaretle.",
+  "onbTitle2": "İlerlemeni gör",
+  "onbDesc2": "Haftalık çubuklar serilerini gösterir.",
+  "onbTitle3": "Yedekle & İçe Aktar",
+  "onbDesc3": "JSON yedeklerini dışa aktar, güvenle içe aktar ve birleştir.",
+  "onbNext": "İleri",
+  "onbSkip": "Atla",
+  "onbStart": "Başla",
+
+  "theme": "Tema",
+  "themeSystem": "Sistem",
+  "themeLight": "Açık",
+  "themeDark2": "Koyu",
+
+  "downloadJsonFile": "JSON yedeğini indir",
+  "downloadJsonFileSub": "Downloads klasörüne kaydet",
+  "savedToDownloads": "Downloads'a kaydedildi",
+  "openAction": "Aç",
+  "backupFailed": "Yedekleme başarısız",
+  "cannotOpenFile": "Bu cihazda dosya açılamadı.",
+  "openFilesApp": "Dosyalar uygulamasını aç",
+  "shareFile": "Paylaş",
+  "previewJson": "JSON yedeğini önizle",
+  "previewJsonSub": "JSON metnini bir pencerede göster",
+  "copyJson": "JSON’u panoya kopyala",
+  "copyJsonSub": "Uygulama olmadan hızlı test için",
+  "jsonCopied": "JSON panoya kopyalandı",
+
+  "importDetail": "{added} yeni, {merged} birleştirildi",
+  "@importDetail": {
+    "placeholders": {
+      "added": { "type": "int" },
+      "merged": { "type": "int" }
+    }
+  },
+
+  "importSummary": "{added} yeni, {merged} birleştirildi",
+  "@importSummary": {
+    "placeholders": {
+      "added": { "type": "int", "example": "2" },
+      "merged": { "type": "int", "example": "3" }
+    }
+  },
+
+  "jsonActions": "JSON İşlemleri",
+  "@jsonActions": {
+    "description": "Settings > Backup bölümünde bütün JSON aksiyonlarını açan sheet'in başlığı"
+  },
+  "jsonActionsSub": "Dışa aktar / indir / içe al / önizle",
+  "@jsonActionsSub": {
+    "description": "JSON sheet'i için kısa açıklama"
+  },
+
+  "backupJsonTitle": "JSON Yedeği",
+  "filterAll": "Tümü",
+  "filterActive": "Aktif",
+  "filterToday": "Bugün ✓",
+  "todaySubtitleOn": "Bugün ✓",
+  "todaySubtitleOff": "Bugün işaretlenmedi",
+  "deleteOne": "Sil",
+
+  "more": "Daha fazla",
+  "@more": { "description": "Overflow menu tooltip (⋯)" }
 }

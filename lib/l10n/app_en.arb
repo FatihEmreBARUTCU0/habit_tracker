@@ -1,6 +1,12 @@
 {
-  "habitListTitle": "My Habits",
+  "backup": "Backup",
+  "exportJsonFile": "Share JSON backup",
+  "exportJsonFileSub": "Share a .json file via system sheet",
+  "sharedViaSystemSheet": "Share sheet opened",
+  "exportFailed": "Export failed",
+  "nothingToExport": "Nothing to export",
 
+  "habitListTitle": "My Habits",
   "cancel": "Cancel",
   "settings": "Settings",
 
@@ -13,13 +19,11 @@
   },
 
   "deleteSelected": "Delete selected",
-
   "todayCheck": "Today ✓",
   "todayUncheck": "Remove today's check",
 
   "edit": "Edit",
   "detail": "Detail",
-
   "noSelection": "No selected item",
 
   "itemsDeleted": "{count} item(s) deleted",
@@ -40,7 +44,6 @@
 
   "addHabit": "Add Habit",
   "add": "Add",
-
   "noHabitsHint": "No habits yet.\nUse the + button below to add.",
 
   "settingsTitle": "Settings",
@@ -58,12 +61,10 @@
   "editHabitTitle": "Edit Habit",
   "newName": "New name",
   "newNameHint": "e.g., Morning water",
-  "updateButton": "Update",
   "updated": "Updated",
 
   "noChange": "You didn’t change anything.",
   "nameEmptyError": "Name cannot be empty.",
-
 
   "detailTitleFor": "Detail: {name}",
   "@detailTitleFor": {
@@ -81,9 +82,110 @@
     }
   },
 
+  "reorder": "Reorder",
+  "done": "Done",
+
+  "todayProgress": "Today {done}/{total} completed",
+  "@todayProgress": {
+    "placeholders": {
+      "done": { "type": "int", "example": "3" },
+      "total": { "type": "int", "example": "5" }
+    }
+  },
+
+  "streakLabel": "Current streak: {count} days",
+  "@streakLabel": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "streakCurrent": "Current streak: {count} days",
+  "streakBest": "Best streak: {count} days",
+  "@streakCurrent": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "@streakBest": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+
   "toggleTodayOn": "Mark Today ✓",
   "toggleTodayOff": "Today ✓ (Undo)",
   "update": "Update",
-"duplicateName": "This habit name already exists."
+  "duplicateName": "This habit name already exists.",
 
+  "importJsonFile": "Import JSON backup",
+  "importJsonFileSub": "Load and merge from a .json file",
+  "importSuccess": "{count} records imported",
+  "@importSuccess": {
+    "placeholders": {
+      "count": { "type": "int", "example": "3" }
+    }
+  },
+  "importNothing": "No new records to import",
+  "importFailed": "Import failed",
+  "invalidBackupFile": "Invalid backup file",
+
+  "onbTitle1": "Track your habits",
+  "onbDesc1": "Create daily routines and mark them ✓.",
+  "onbTitle2": "See your progress",
+  "onbDesc2": "Weekly bars show your streaks.",
+  "onbTitle3": "Backup & Import",
+  "onbDesc3": "Export JSON backups, import and merge safely.",
+  "onbNext": "Next",
+  "onbSkip": "Skip",
+  "onbStart": "Get started",
+
+  "theme": "Theme",
+  "themeSystem": "System",
+  "themeLight": "Light",
+  "themeDark2": "Dark",
+
+  "downloadJsonFile": "Download JSON backup",
+  "downloadJsonFileSub": "Save to the Downloads folder",
+  "savedToDownloads": "Saved to Downloads",
+  "openAction": "Open",
+  "backupFailed": "Backup failed",
+  "cannotOpenFile": "Couldn’t open the file on this device.",
+  "openFilesApp": "Open Files app",
+  "shareFile": "Share",
+  "previewJson": "Preview JSON backup",
+  "previewJsonSub": "View the JSON text in a dialog",
+  "copyJson": "Copy JSON to clipboard",
+  "copyJsonSub": "Use for quick testing without apps",
+  "jsonCopied": "JSON copied to clipboard",
+
+  "importDetail": "{added} added, {merged} merged",
+  "@importDetail": {
+    "placeholders": {
+      "added": { "type": "int" },
+      "merged": { "type": "int" }
+    }
+  },
+
+  "importSummary": "{added} new, {merged} merged",
+  "@importSummary": {
+    "placeholders": {
+      "added": { "type": "int", "example": "2" },
+      "merged": { "type": "int", "example": "3" }
+    }
+  },
+
+  "jsonActions": "JSON actions",
+  "@jsonActions": {
+    "description": "Title for the sheet that groups all JSON actions in Settings > Backup"
+  },
+  "jsonActionsSub": "Export / download / import / preview",
+  "@jsonActionsSub": {
+    "description": "Short hint for the JSON actions sheet"
+  },
+
+  "backupJsonTitle": "Backup JSON",
+  "filterAll": "All",
+  "filterActive": "Active",
+  "filterToday": "Today ✓",
+  "todaySubtitleOn": "Today ✓",
+  "todaySubtitleOff": "Not checked",
+  "deleteOne": "Delete",
+  "more": "More"
 }

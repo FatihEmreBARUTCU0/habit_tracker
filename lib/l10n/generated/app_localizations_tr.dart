@@ -9,6 +9,24 @@ class AppLocalizationsTr extends AppLocalizations {
   AppLocalizationsTr([String locale = 'tr']) : super(locale);
 
   @override
+  String get backup => 'Yedekleme';
+
+  @override
+  String get exportJsonFile => 'JSON yedeğini paylaş';
+
+  @override
+  String get exportJsonFileSub => 'Sistem paylaşım menüsü ile .json dosyası';
+
+  @override
+  String get sharedViaSystemSheet => 'Paylaşım menüsü açıldı';
+
+  @override
+  String get exportFailed => 'Dışa aktarma başarısız';
+
+  @override
+  String get nothingToExport => 'Dışa aktarılacak kayıt yok';
+
+  @override
   String get habitListTitle => 'Alışkanlıklarım';
 
   @override
@@ -103,9 +121,6 @@ class AppLocalizationsTr extends AppLocalizations {
   String get newNameHint => 'Örn: Sabah su içmek';
 
   @override
-  String get updateButton => 'Güncelle';
-
-  @override
   String get updated => 'Güncellendi.';
 
   @override
@@ -128,6 +143,32 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
+  String get reorder => 'Sırala';
+
+  @override
+  String get done => 'Bitti';
+
+  @override
+  String todayProgress(int done, int total) {
+    return 'Bugün $done/$total tamamlandı';
+  }
+
+  @override
+  String streakLabel(int count) {
+    return 'Seri: $count gün';
+  }
+
+  @override
+  String streakCurrent(int count) {
+    return 'Güncel seri: $count gün';
+  }
+
+  @override
+  String streakBest(int count) {
+    return 'En iyi seri: $count gün';
+  }
+
+  @override
   String get toggleTodayOn => 'Bugün ✓ İşaretle';
 
   @override
@@ -138,4 +179,143 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get duplicateName => 'Bu alışkanlık adı zaten var.';
+
+  @override
+  String get importJsonFile => 'JSON yedeğini içe aktar';
+
+  @override
+  String get importJsonFileSub => 'Dosyadan .json yükle ve birleştir';
+
+  @override
+  String importSuccess(int count) {
+    return '$count kayıt içe aktarıldı';
+  }
+
+  @override
+  String get importNothing => 'İçe aktarılacak yeni kayıt yok';
+
+  @override
+  String get importFailed => 'İçe aktarma başarısız';
+
+  @override
+  String get invalidBackupFile => 'Geçersiz yedek dosyası';
+
+  @override
+  String get onbTitle1 => 'Alışkanlıklarını takip et';
+
+  @override
+  String get onbDesc1 => 'Günlük rutinler oluştur ve ✓ işaretle.';
+
+  @override
+  String get onbTitle2 => 'İlerlemeni gör';
+
+  @override
+  String get onbDesc2 => 'Haftalık çubuklar serilerini gösterir.';
+
+  @override
+  String get onbTitle3 => 'Yedekle & İçe Aktar';
+
+  @override
+  String get onbDesc3 =>
+      'JSON yedeklerini dışa aktar, güvenle içe aktar ve birleştir.';
+
+  @override
+  String get onbNext => 'İleri';
+
+  @override
+  String get onbSkip => 'Atla';
+
+  @override
+  String get onbStart => 'Başla';
+
+  @override
+  String get theme => 'Tema';
+
+  @override
+  String get themeSystem => 'Sistem';
+
+  @override
+  String get themeLight => 'Açık';
+
+  @override
+  String get themeDark2 => 'Koyu';
+
+  @override
+  String get downloadJsonFile => 'JSON yedeğini indir';
+
+  @override
+  String get downloadJsonFileSub => 'Downloads klasörüne kaydet';
+
+  @override
+  String get savedToDownloads => 'Downloads\'a kaydedildi';
+
+  @override
+  String get openAction => 'Aç';
+
+  @override
+  String get backupFailed => 'Yedekleme başarısız';
+
+  @override
+  String get cannotOpenFile => 'Bu cihazda dosya açılamadı.';
+
+  @override
+  String get openFilesApp => 'Dosyalar uygulamasını aç';
+
+  @override
+  String get shareFile => 'Paylaş';
+
+  @override
+  String get previewJson => 'JSON yedeğini önizle';
+
+  @override
+  String get previewJsonSub => 'JSON metnini bir pencerede göster';
+
+  @override
+  String get copyJson => 'JSON’u panoya kopyala';
+
+  @override
+  String get copyJsonSub => 'Uygulama olmadan hızlı test için';
+
+  @override
+  String get jsonCopied => 'JSON panoya kopyalandı';
+
+  @override
+  String importDetail(int added, int merged) {
+    return '$added yeni, $merged birleştirildi';
+  }
+
+  @override
+  String importSummary(int added, int merged) {
+    return '$added yeni, $merged birleştirildi';
+  }
+
+  @override
+  String get jsonActions => 'JSON İşlemleri';
+
+  @override
+  String get jsonActionsSub => 'Dışa aktar / indir / içe al / önizle';
+
+  @override
+  String get backupJsonTitle => 'JSON Yedeği';
+
+  @override
+  String get filterAll => 'Tümü';
+
+  @override
+  String get filterActive => 'Aktif';
+
+  @override
+  String get filterToday => 'Bugün ✓';
+
+  @override
+  String get todaySubtitleOn => 'Bugün ✓';
+
+  @override
+  String get todaySubtitleOff => 'Bugün işaretlenmedi';
+
+  @override
+  String get deleteOne => 'Sil';
+
+  @override
+  String get more => 'Daha fazla';
 }

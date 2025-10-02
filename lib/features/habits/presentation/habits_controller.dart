@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:habit_tracker/features/habits/domain/habit.dart';
 import 'package:habit_tracker/features/habits/data/habits_repository.dart';
 import 'package:habit_tracker/core/utils/id_utils.dart';
+import 'package:habit_tracker/core/backup/import_service.dart';
 
 class HabitsController extends ChangeNotifier {
   final HabitsRepository repo;
@@ -36,7 +37,7 @@ class HabitsController extends ChangeNotifier {
   Future<void> toggleToday(Habit h) async {
     final i = _items.indexWhere((x) => x.id == h.id);
     if (i == -1) return;
-    _items[i].toggleToday();
+    _items[i] = _items[i].toggleTodayImmutable();
     await repo.save(_items);
     notifyListeners();
   }
@@ -57,4 +58,32 @@ class HabitsController extends ChangeNotifier {
     await repo.save(_items);
     notifyListeners();
   }
+
+Future<ImportResult> importHabits(List<Habit> incoming) async {
+  final svc = ImportService();
+  final res = svc.mergeInto(_items, incoming);
+  await repo.save(_items);
+  notifyListeners();
+  return res;
+}
+
+Future<void> move(int oldIndex, int newIndex) async {
+  // Flutter onReorder: newIndex, oldIndex'ten sonra ise bir kaydırma gerekir
+  if (newIndex > oldIndex) newIndex -= 1;
+
+  // Sınır kontrolleri (güvenli alan)
+  if (oldIndex < 0 || oldIndex >= _items.length) return;
+  if (newIndex < 0 || newIndex >= _items.length) return;
+
+  // Değişiklik yoksa yazma/notify yapma
+  if (oldIndex == newIndex) return;
+
+  final item = _items.removeAt(oldIndex);
+  _items.insert(newIndex, item);
+
+  await repo.save(_items);
+  notifyListeners();
+}
+
+
 }

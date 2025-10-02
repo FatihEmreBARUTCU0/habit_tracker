@@ -67,8 +67,8 @@ abstract class AppLocalizations {
 
   final String localeName;
 
-  static AppLocalizations? of(BuildContext context) {
-    return Localizations.of<AppLocalizations>(context, AppLocalizations);
+  static AppLocalizations of(BuildContext context) {
+    return Localizations.of<AppLocalizations>(context, AppLocalizations)!;
   }
 
   static const LocalizationsDelegate<AppLocalizations> delegate =
@@ -97,6 +97,42 @@ abstract class AppLocalizations {
     Locale('en'),
     Locale('tr')
   ];
+
+  /// No description provided for @backup.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup'**
+  String get backup;
+
+  /// No description provided for @exportJsonFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Share JSON backup'**
+  String get exportJsonFile;
+
+  /// No description provided for @exportJsonFileSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Share a .json file via system sheet'**
+  String get exportJsonFileSub;
+
+  /// No description provided for @sharedViaSystemSheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Share sheet opened'**
+  String get sharedViaSystemSheet;
+
+  /// No description provided for @exportFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Export failed'**
+  String get exportFailed;
+
+  /// No description provided for @nothingToExport.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing to export'**
+  String get nothingToExport;
 
   /// No description provided for @habitListTitle.
   ///
@@ -272,12 +308,6 @@ abstract class AppLocalizations {
   /// **'e.g., Morning water'**
   String get newNameHint;
 
-  /// No description provided for @updateButton.
-  ///
-  /// In en, this message translates to:
-  /// **'Update'**
-  String get updateButton;
-
   /// No description provided for @updated.
   ///
   /// In en, this message translates to:
@@ -314,6 +344,42 @@ abstract class AppLocalizations {
   /// **'Success: {done}/7  (%{percent})'**
   String successLabel(int done, int percent);
 
+  /// No description provided for @reorder.
+  ///
+  /// In en, this message translates to:
+  /// **'Reorder'**
+  String get reorder;
+
+  /// No description provided for @done.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get done;
+
+  /// No description provided for @todayProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Today {done}/{total} completed'**
+  String todayProgress(int done, int total);
+
+  /// No description provided for @streakLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Current streak: {count} days'**
+  String streakLabel(int count);
+
+  /// No description provided for @streakCurrent.
+  ///
+  /// In en, this message translates to:
+  /// **'Current streak: {count} days'**
+  String streakCurrent(int count);
+
+  /// No description provided for @streakBest.
+  ///
+  /// In en, this message translates to:
+  /// **'Best streak: {count} days'**
+  String streakBest(int count);
+
   /// No description provided for @toggleTodayOn.
   ///
   /// In en, this message translates to:
@@ -337,6 +403,270 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This habit name already exists.'**
   String get duplicateName;
+
+  /// No description provided for @importJsonFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Import JSON backup'**
+  String get importJsonFile;
+
+  /// No description provided for @importJsonFileSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Load and merge from a .json file'**
+  String get importJsonFileSub;
+
+  /// No description provided for @importSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} records imported'**
+  String importSuccess(int count);
+
+  /// No description provided for @importNothing.
+  ///
+  /// In en, this message translates to:
+  /// **'No new records to import'**
+  String get importNothing;
+
+  /// No description provided for @importFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Import failed'**
+  String get importFailed;
+
+  /// No description provided for @invalidBackupFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid backup file'**
+  String get invalidBackupFile;
+
+  /// No description provided for @onbTitle1.
+  ///
+  /// In en, this message translates to:
+  /// **'Track your habits'**
+  String get onbTitle1;
+
+  /// No description provided for @onbDesc1.
+  ///
+  /// In en, this message translates to:
+  /// **'Create daily routines and mark them ✓.'**
+  String get onbDesc1;
+
+  /// No description provided for @onbTitle2.
+  ///
+  /// In en, this message translates to:
+  /// **'See your progress'**
+  String get onbTitle2;
+
+  /// No description provided for @onbDesc2.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly bars show your streaks.'**
+  String get onbDesc2;
+
+  /// No description provided for @onbTitle3.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup & Import'**
+  String get onbTitle3;
+
+  /// No description provided for @onbDesc3.
+  ///
+  /// In en, this message translates to:
+  /// **'Export JSON backups, import and merge safely.'**
+  String get onbDesc3;
+
+  /// No description provided for @onbNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get onbNext;
+
+  /// No description provided for @onbSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get onbSkip;
+
+  /// No description provided for @onbStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Get started'**
+  String get onbStart;
+
+  /// No description provided for @theme.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get theme;
+
+  /// No description provided for @themeSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get themeSystem;
+
+  /// No description provided for @themeLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get themeLight;
+
+  /// No description provided for @themeDark2.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get themeDark2;
+
+  /// No description provided for @downloadJsonFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Download JSON backup'**
+  String get downloadJsonFile;
+
+  /// No description provided for @downloadJsonFileSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Save to the Downloads folder'**
+  String get downloadJsonFileSub;
+
+  /// No description provided for @savedToDownloads.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved to Downloads'**
+  String get savedToDownloads;
+
+  /// No description provided for @openAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get openAction;
+
+  /// No description provided for @backupFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup failed'**
+  String get backupFailed;
+
+  /// No description provided for @cannotOpenFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn’t open the file on this device.'**
+  String get cannotOpenFile;
+
+  /// No description provided for @openFilesApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Files app'**
+  String get openFilesApp;
+
+  /// No description provided for @shareFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get shareFile;
+
+  /// No description provided for @previewJson.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview JSON backup'**
+  String get previewJson;
+
+  /// No description provided for @previewJsonSub.
+  ///
+  /// In en, this message translates to:
+  /// **'View the JSON text in a dialog'**
+  String get previewJsonSub;
+
+  /// No description provided for @copyJson.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy JSON to clipboard'**
+  String get copyJson;
+
+  /// No description provided for @copyJsonSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Use for quick testing without apps'**
+  String get copyJsonSub;
+
+  /// No description provided for @jsonCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'JSON copied to clipboard'**
+  String get jsonCopied;
+
+  /// No description provided for @importDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'{added} added, {merged} merged'**
+  String importDetail(int added, int merged);
+
+  /// No description provided for @importSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'{added} new, {merged} merged'**
+  String importSummary(int added, int merged);
+
+  /// Title for the sheet that groups all JSON actions in Settings > Backup
+  ///
+  /// In en, this message translates to:
+  /// **'JSON actions'**
+  String get jsonActions;
+
+  /// Short hint for the JSON actions sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Export / download / import / preview'**
+  String get jsonActionsSub;
+
+  /// No description provided for @backupJsonTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup JSON'**
+  String get backupJsonTitle;
+
+  /// No description provided for @filterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get filterAll;
+
+  /// No description provided for @filterActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get filterActive;
+
+  /// No description provided for @filterToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today ✓'**
+  String get filterToday;
+
+  /// No description provided for @todaySubtitleOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Today ✓'**
+  String get todaySubtitleOn;
+
+  /// No description provided for @todaySubtitleOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Not checked'**
+  String get todaySubtitleOff;
+
+  /// No description provided for @deleteOne.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get deleteOne;
+
+  /// No description provided for @more.
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get more;
 }
 
 class _AppLocalizationsDelegate
