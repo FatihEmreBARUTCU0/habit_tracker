@@ -35,11 +35,13 @@
 
 ---
 
-## 🖼️ Ekran Görüntüleri
-- ![Home (Light)](docs/01_home_light.png)  
-- ![Home (Dark)](docs/02_home_dark.png)  
-- ![Detail + Chart](docs/03_detail_chart.png)  
-- ![Settings](docs/04_settings.png)  
+| Home (Light) | Home (Dark) |
+|--------------|-------------|
+| <img src="docs/01_home_light.png" width="250"> | <img src="docs/02_home_dark.png" width="250"> |
+
+| Detail + Chart | Settings |
+|----------------|----------|
+| <img src="docs/03_detail_chart.png" width="250"> | <img src="docs/04_settings.png" width="250"> |
 ---
 
 ## ⚙️ Kurulum
