@@ -171,6 +171,7 @@ class NeonHabitTile extends StatelessWidget {
           padding: const EdgeInsets.all(12),
           radius: 22,
            glow: false,
+            useBlur: false,  
             blurSigma: 8,
           child: InkWell(
             borderRadius: BorderRadius.circular(22),

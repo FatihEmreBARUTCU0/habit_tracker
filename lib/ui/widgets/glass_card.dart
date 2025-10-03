@@ -10,6 +10,7 @@ class GlassCard extends StatelessWidget {
   final GestureTapCallback? onTap;
   final double? blurSigma;
   final bool highlight;
+  final bool useBlur; // ✅
 
   const GlassCard({
     super.key,
@@ -20,59 +21,71 @@ class GlassCard extends StatelessWidget {
     this.onTap,
     this.blurSigma,
     this.highlight = true,
+    this.useBlur = true, // eski davranış
   });
 
   @override
   Widget build(BuildContext context) {
     final n = context.neon;
-
-    // Tema farkı
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    // Opsiyonel: Light modda cam film (overlay) biraz daha temiz (−%20)
-    final double overlayAlpha = isDark
-        ? n.glassOverlay
-        : (n.glassOverlay * 0.8); // 0..1 aralığında
-    final overlay = Colors.white.withValues(
-      alpha: overlayAlpha.clamp(0.0, 1.0),
+    final double overlayAlpha = isDark ? n.glassOverlay : (n.glassOverlay * 0.8);
+    final overlay = Colors.white.withValues(alpha: overlayAlpha.clamp(0.0, 1.0));
+
+    final lightShadow = const Color(0xFFFFA8C2).withValues(alpha: 0.14);
+    final darkShadow = n.glow;
+
+    // İç çekirdek (blur opsiyonel)
+    Widget core = Container(
+      padding: padding,
+      decoration: BoxDecoration(
+        color: overlay,
+        borderRadius: BorderRadius.circular(radius),
+        border: Border.all(color: n.glassStroke, width: 1),
+        // Color + Gradient çakışmasını önlemek için parıltıyı foreground'a taşıyoruz
+        // (foregroundDecoration aşağıda eklenecek)
+      ),
+      // foregroundDecoration = highlight ? … : null şeklinde verilecek
+      foregroundDecoration: highlight
+          ? const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0x11FFFFFF), Color(0x00000000)],
+              ),
+              // borderRadius foreground'da da belirtilmeli
+              borderRadius: BorderRadius.all(Radius.circular(20)),
+            )
+          : null,
+      child: child,
     );
 
-    // Dış glow (neon hissi) — tema bazlı
-    final lightShadow = const Color(0xFFFFA8C2).withValues(alpha: 0.14); // sıcak şeftali
-    final darkShadow = n.glow; // dark modda neon plum kalsın
-
-    // İç cam/blur + (opsiyonel) üstten parıltı (gradient)
-    final cardCore = ClipRRect(
-      borderRadius: BorderRadius.circular(radius),
-      child: BackdropFilter(
+    if (useBlur) {
+      core = BackdropFilter(
         filter: ImageFilter.blur(
           sigmaX: blurSigma ?? n.glassBlur,
           sigmaY: blurSigma ?? n.glassBlur,
         ),
-        child: Container(
-          padding: padding,
-          decoration: BoxDecoration(
-            color: overlay,
-            borderRadius: BorderRadius.circular(radius),
-            border: Border.all(color: n.glassStroke, width: 1),
-            // Highlight kapatılabilir
-            gradient: highlight
-                ? const LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Color(0x11FFFFFF), // çok hafif beyaz
-                      Color(0x00000000), // tamamen saydam
-                    ],
-                  )
-                : null,
-          ),
-          child: child,
-        ),
-      ),
+        child: core,
+      );
+    }
+
+    final cardCore = ClipRRect(
+      borderRadius: BorderRadius.circular(radius),
+      child: core,
     );
 
-    // Dış glow (tema bazlı ayarlı)
+    final content = onTap == null
+        ? cardCore
+        : Material( // 👈 splash için
+            type: MaterialType.transparency,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(radius),
+              onTap: onTap,
+              child: cardCore,
+            ),
+          );
+
     return Container(
       margin: margin,
       decoration: BoxDecoration(
@@ -80,19 +93,13 @@ class GlassCard extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: isDark ? darkShadow : lightShadow,
-            blurRadius: isDark ? 24 : 16,     // light’ta daha az blur
-            spreadRadius: isDark ? 1 : 0.2,   // light’ta daha dar penumbra
+            blurRadius: isDark ? 24 : 16,
+            spreadRadius: isDark ? 1 : 0.2,
             offset: isDark ? const Offset(0, 8) : const Offset(0, 6),
           ),
         ],
       ),
-      child: onTap == null
-          ? cardCore
-          : InkWell(
-              borderRadius: BorderRadius.circular(radius),
-              onTap: onTap,
-              child: cardCore,
-            ),
+      child: content,
     );
   }
 }

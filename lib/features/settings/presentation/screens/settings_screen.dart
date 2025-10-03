@@ -38,6 +38,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: GlassCard(
+              useBlur: false, 
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -264,6 +265,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             margin: const EdgeInsets.only(bottom: 16),
             padding: const EdgeInsets.all(12),
             radius: 22,
+             useBlur: false,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -321,6 +323,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           NeonOutlineCard(
             padding: const EdgeInsets.all(12),
             radius: 22,
+             useBlur: false,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
