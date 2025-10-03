@@ -40,7 +40,6 @@
 - ![Home (Dark)](docs/02_home_dark.png)  
 - ![Detail + Chart](docs/03_detail_chart.png)  
 - ![Settings](docs/04_settings.png)  
-
 ---
 
 ## ⚙️ Kurulum
