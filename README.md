@@ -37,11 +37,11 @@
 
 | Home (Light) | Home (Dark) |
 |--------------|-------------|
-| <img src="docs/01_home_light..png" width="250"> | <img src="docs/02_home_dark..png" width="250"> |
+| <img src="docs/01_home_lightx.png" width="250"> | <img src="docs/02_home_darkx.png" width="250"> |
 
 | Detail + Chart | Settings |
 |----------------|----------|
-| <img src="docs/03_detail_chart..png" width="250"> | <img src="docs/04_settings..png" width="250"> |
+| <img src="docs/03_detail_chartx.png" width="250"> | <img src="docs/04_settingsx.png" width="250"> |
 ---
 
 ## ⚙️ Kurulum
